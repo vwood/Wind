@@ -1,5 +1,6 @@
 #!/usr/bin/env python2
 
+import pgu
 import pygame
 from pygame.locals import *
 
@@ -26,6 +27,13 @@ class Engine(object):
         self.screen = pygame.display.set_mode((width, height))
         pygame.display.set_caption("Engine")
         self.clock = pygame.time.Clock()
+        
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((0, 10, 30))
+        self.screen.blit(self.background, (0, 0))
+        blit_text(self.screen, "Bums", 20, 20, 20, (200,200,200))
+        pygame.display.flip()
 
     def run(self):
         """Mainloop for catching events and performing updates."""
