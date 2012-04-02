@@ -22,6 +22,7 @@ def blit_text(surface, text, x=None, y=None, size=12, color=(255, 255, 255)):
 # TODO: Needs key repeating (on hold)
 # TODO: Text selection    
 # TODO: Line wrap + line maximums (can't just add \n's !)
+# TODO: enforce width and height (screen location)
 # TODO: Simple syntax highlighting
 class TextBox(object):
     """A box that contains text."""
@@ -54,53 +55,109 @@ class TextBox(object):
                                     + self.contents[self.line][self.char:])
         self.char += len(s)
 
+    def insert_newline(self):
+        """Insert a newline at the cursor (as if it were typed)."""
+        self.contents = (self.contents[:self.line]
+                         + [self.contents[self.line][:self.char],
+                            self.contents[self.line][self.char:]]
+                         + self.contents[self.line + 1:])
+        self.line += 1
+        self.char = 0
+
+    def cursor_up(self):
+        if self.line > 0:
+            self.line -= 1
+
+    def cursor_left(self):
+        if self.char > 0:
+            self.char -= 1
+        elif self.line > 0:
+            self.line -= 1
+            self.char = len(self.contents[self.line])
+
+    def cursor_right(self):
+        if self.char <= len(self.contents[self.line]):
+            self.char += 1
+        elif self.line < len(self.contents) - 1:
+            self.char = 0
+            self.line += 1
+
+    def cursor_down(self):
+        if self.line < len(self.contents) - 1:
+            self.line += 1
+
+    def delete_char_backwards(self):
+        if self.char > 0:
+            self.contents[self.line] = (self.contents[self.line][:self.char - 1]
+                                        + self.contents[self.line][self.char:])
+            self.char -= 1
+        elif self.line > 0:
+            self.char = len(self.contents[self.line - 1])
+            self.contents = (self.contents[:self.line - 1]
+                             + [self.contents[self.line - 1]
+                                + self.contents[self.line]]
+                             + self.contents[self.line + 1:])
+            self.line -= 1
+
+    def delete_char_forwards(self):
+        if self.char < len(self.contents[self.line]):
+            self.contents[self.line] = (self.contents[self.line][:self.char]
+                                        + self.contents[self.line][self.char + 1:])
+        elif self.line < len(self.contents) - 1:
+            self.contents = (self.contents[:self.line]
+                             + [self.contents[self.line]
+                                + self.contents[self.line + 1]]
+                             + self.contents[self.line + 2:])
+
+    def delete_til_end_of_line(self):
+        if self.char < len(self.contents[self.line]):
+            self.contents[self.line] = self.contents[self.line][:self.char]
+        elif self.line < len(self.contents) - 1:
+            self.contents = (self.contents[:self.line]
+                             + [self.contents[self.line]
+                                + self.contents[self.line + 1]]
+                             + self.contents[self.line + 2:])
+        
+    def cursor_start_of_line(self):
+        self.char = 0
+
+    def cursor_end_of_line(self):
+        self.char = len(self.contents[self.line])
+        
     def handle_event(self, event):
         if event.key == K_RETURN:
-            self.contents = (self.contents[:self.line]
-                             + [self.contents[self.line][:self.char],
-                                self.contents[self.line][self.char:]]
-                             + self.contents[self.line + 1:])
-            self.line += 1
-            self.char = 0
+            self.insert_newline()
         elif event.key == K_TAB:
             self.insert(' ' * 4)
         elif event.key == K_UP:
-            if self.line > 0: self.line -= 1
+            self.cursor_up()
         elif event.key == K_LEFT:
-            if self.char > 0:
-                self.char -= 1
-            elif self.line > 0:
-                self.line -= 1
-                self.char = len(self.contents[self.line])
+            self.cursor_left()
         elif event.key == K_RIGHT:
-            if self.char <= len(self.contents[self.line]):
-                self.char += 1
-            elif self.line < len(self.contents) - 1:
-                self.char = 0
-                self.line += 1
+            self.cursor_right()
         elif event.key == K_DOWN:
-            if self.line < len(self.contents) - 1: self.line += 1
+            self.cursor_down()
         elif event.key == K_BACKSPACE:
-            if self.char > 0:
-                self.contents[self.line] = (self.contents[self.line][:self.char - 1]
-                                 + self.contents[self.line][self.char:])
-                self.char -= 1
-            elif self.line > 0:
-                self.char = len(self.contents[self.line - 1])
-                self.contents = (self.contents[:self.line - 1]
-                                 + [self.contents[self.line - 1]
-                                    + self.contents[self.line]]
-                                 + self.contents[self.line + 1:])
-                self.line -= 1
+            self.delete_char_backwards()
         elif event.key == K_DELETE:
-            if self.char < len(self.contents[self.line]):
-                self.contents[self.line] = (self.contents[self.line][:self.char]
-                                 + self.contents[self.line][self.char + 1:])
-            elif self.line < len(self.contents) - 1:
-                self.contents = (self.contents[:self.line]
-                                 + [self.contents[self.line]
-                                    + self.contents[self.line + 1]]
-                                 + self.contents[self.line + 2:])
+            self.delete_char_forwards()
+        elif event.mod & KMOD_CTRL:
+            if event.key == ord('a'):
+                self.cursor_start_of_line()
+            elif event.key == ord('d'):
+                self.delete_char_forwards()
+            elif event.key == ord('k'):
+                self.delete_til_end_of_line()
+            elif event.key == ord('e'):
+                self.cursor_end_of_line()
+            elif event.key == ord('n'):
+                self.cursor_down()
+            elif event.key == ord('p'):
+                self.cursor_up()
+            elif event.key == ord('b'):
+                self.cursor_left()
+            elif event.key == ord('f'):
+                self.cursor_right()
         else:
             self.insert(event.unicode)
     
@@ -118,7 +175,7 @@ class Engine(object):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = TextBox("Default")
+        self.textbox = TextBox("You can write here.", 0, 0, 14, (100, 200, 100))
 #        self.gui = pgui.App()
 #        container = pgui.Container()
 #        container.add(pgui.TextArea("", 300, 200, 12), x=0, y=0)
@@ -129,8 +186,7 @@ class Engine(object):
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
-        self.textbox.display(self.screen, 80, 80)
-        blit_text(self.screen, "Test\nText", 20, 20, 20, (200,200,200))
+        self.textbox.display(self.screen, 0, 0)
         pygame.display.flip()
 
     def run(self):
