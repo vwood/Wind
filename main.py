@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #import ode
 #from pgu import gui as pgui
@@ -22,17 +22,39 @@ def blit_text(surface, text, x=None, y=None, size=12, color=(255, 255, 255)):
 
 class Rope(object):
     """Concatenation tree for strings."""
-    pass
+    def __init__(self):
+        self.contents = []
+        self.lengths = []
 
+    def __str__(self):
+        return "".join(self.contents)
+
+class Widget(object):
+    """A GUI item.
+    May contain other GUI items."""
+    def __init__(self):
+        self.contents = []
+        self.width, self.height = 1, 1
+        self.selection = None
+
+    def display(self, surface):
+        pass
+
+    def handle(self, event):
+        """self.selection handles the event dispatch.
+        Except for mouse events which go to whatever is clicked upon.
+        Which then changes the current selection."""
+        pass
+
+    
 # TODO: Start using editor.py
-# TODO: Needs key repeating (on hold)
 # TODO: Text selection    
 # TODO: Line wrap + line maximums (can't just add \n's !)
 # TODO: enforce width and height (screen location)
 # TODO: Simple syntax highlighting (requires meta data)
 # TODO: the contents should be held in a rope with speed up for going up and down lines...
 # TODO: keybindings stored in a dict. (or several dicts.)
-class TextBox(object):
+class TextBox(Widget):
     """A box that contains text."""
     def __init__(self, contents="", width=32, height=1, font_size=24, color=(255, 255, 255)):
         self.width, self.height = width, height
@@ -174,6 +196,7 @@ class Engine(object):
     def __init__(self, width=640, height=240):
         super(Engine, self).__init__()
         pygame.init()
+        pygame.key.set_repeat(300, 50)
         if not pygame.font:
             exit()
         self.screen = pygame.display.set_mode((width, height))
@@ -184,6 +207,7 @@ class Engine(object):
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
         self.textbox = TextBox("You can write here.", 0, 0, 14, (100, 200, 100))
+        self.textbox2 = TextBox("Or here.", 0, 0, 14, (200, 100, 100))
 #        self.gui = pgui.App()
 #        container = pgui.Container()
 #        container.add(pgui.TextArea("", 300, 200, 12), x=0, y=0)
@@ -195,6 +219,7 @@ class Engine(object):
     def display(self):
         self.screen.blit(self.background, (0, 0))
         self.textbox.display(self.screen, 0, 0)
+        self.textbox2.display(self.screen, 320, 0)
         pygame.display.flip()
 
     def run(self):
