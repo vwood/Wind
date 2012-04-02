@@ -6,10 +6,12 @@ import pygame
 from pygame.locals import *
 
 # TODO: I would prefer objects... with editable text.
+# TODO: Store the font once in resource management (env)
+# TODO: Store list of text, and only rerender when it changes
 def blit_text(surface, text, x=None, y=None, size=12, color=(255, 255, 255)):
     """Display a string on a surface centred at x & y.
     If either of x or y are not set, the text is centred on that axis."""
-    font = pygame.font.Font("Inconsolata.otf", size) # Fonts should be stored in some form of resource management (env)
+    font = pygame.font.Font("Inconsolata.otf", size)
     text = font.render(text, True, color) # True for antialiasing
     if x == None:
         x = surface.get_width() / 2
@@ -18,12 +20,18 @@ def blit_text(surface, text, x=None, y=None, size=12, color=(255, 255, 255)):
     pos = text.get_rect(x = x, y = y)
     surface.blit(text, pos)
 
+class Rope(object):
+    """Concatenation tree for strings."""
+    pass
 
+# TODO: Start using editor.py
 # TODO: Needs key repeating (on hold)
 # TODO: Text selection    
 # TODO: Line wrap + line maximums (can't just add \n's !)
 # TODO: enforce width and height (screen location)
-# TODO: Simple syntax highlighting
+# TODO: Simple syntax highlighting (requires meta data)
+# TODO: the contents should be held in a rope with speed up for going up and down lines...
+# TODO: keybindings stored in a dict. (or several dicts.)
 class TextBox(object):
     """A box that contains text."""
     def __init__(self, contents="", width=32, height=1, font_size=24, color=(255, 255, 255)):
@@ -207,4 +215,3 @@ class Engine(object):
 if __name__ == '__main__':
     e = Engine()
     e.run()
-
