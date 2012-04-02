@@ -37,6 +37,9 @@ class Widget(object):
         self.width, self.height = 1, 1
         self.selection = None
 
+    def set_size(self, w, h):
+        self.width, self.height = w, h
+
     def display(self, surface):
         pass
 
@@ -44,8 +47,10 @@ class Widget(object):
         """self.selection handles the event dispatch.
         Except for mouse events which go to whatever is clicked upon.
         Which then changes the current selection."""
-        pass
-
+        if event.type == MOUSEBUTTONDOWN:
+            pass
+        elif event.type == KEYDOWN:
+            pass
     
 # TODO: Start using editor.py
 # TODO: Text selection    
