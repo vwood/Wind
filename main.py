@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 #import ode
 #from pgu import gui as pgui
@@ -36,7 +36,7 @@ class Widget(object):
         self.contents = []
         self.width, self.height = 1, 1
         self.selection = None
-
+        
     def set_size(self, w, h):
         self.width, self.height = w, h
 
@@ -50,7 +50,8 @@ class Widget(object):
         if event.type == MOUSEBUTTONDOWN:
             pass
         elif event.type == KEYDOWN:
-            pass
+            if self.selection:
+                self.selection.handle(event)
     
 # TODO: Start using editor.py
 # TODO: Text selection    
@@ -68,14 +69,15 @@ class TextBox(Widget):
         self.char = 0
         self.line = 0
         self.color = color
-
+        self.show_cursor = True
+        
     def display(self, surface, x, y):
         """Display the text box on a surface."""
         this_y = y
         for line in self.contents:
             blit_text(surface, line, x, this_y, self.font_size, self.color)
             this_y += self.font_size
-        if pygame.time.get_ticks() / 500 % 2 == 0:
+        if self.show_cursor and pygame.time.get_ticks() / 500 % 2 == 0:
             font = pygame.font.Font("Inconsolata.otf", self.font_size)
             w, h = font.size(self.contents[self.line][:self.char])
             text = font.render(self.contents[self.line][:self.char], True, self.color)
@@ -158,8 +160,14 @@ class TextBox(Widget):
 
     def cursor_end_of_line(self):
         self.char = len(self.contents[self.line])
+
+    def handle(self, event):
+        """Overrides the widget method."""
+        if event.type == KEYDOWN:
+            self.handle_keydown(event)
         
-    def handle_event(self, event):
+    def handle_keydown(self, event):
+        """Handles keydown events given to the TextBox."""
         if event.key == K_RETURN:
             self.insert_newline()
         elif event.key == K_TAB:
@@ -213,6 +221,7 @@ class Engine(object):
         self.background.fill((0, 10, 30))
         self.textbox = TextBox("You can write here.", 0, 0, 14, (100, 200, 100))
         self.textbox2 = TextBox("Or here.", 0, 0, 14, (200, 100, 100))
+        self.textbox2.show_cursor = False
 #        self.gui = pgui.App()
 #        container = pgui.Container()
 #        container.add(pgui.TextArea("", 300, 200, 12), x=0, y=0)
@@ -240,7 +249,7 @@ class Engine(object):
                     if event.key == K_ESCAPE:
                         exit()
                     else:
-                        self.textbox.handle_event(event)
+                        self.textbox.handle_keydown(event)
                         
 if __name__ == '__main__':
     e = Engine()
