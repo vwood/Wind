@@ -31,16 +31,19 @@ class Rope(object):
 
 class Widget(object):
     """A GUI item.
-    May contain other GUI items."""
+    May contain other GUI items. (in a flow based layout)"""
     def __init__(self):
         self.contents = []
         self.width, self.height = 1, 1
         self.selection = None
-        
+
     def set_size(self, w, h):
         self.width, self.height = w, h
 
-    def display(self, surface):
+    def get_size(self):
+        return (self.width, self.height)
+
+    def display(self, surface, x,):
         pass
 
     def handle(self, event):
@@ -73,18 +76,16 @@ class TextBox(Widget):
         
     def display(self, surface, x, y):
         """Display the text box on a surface."""
-        this_y = y
-        for line in self.contents:
-            blit_text(surface, line, x, this_y, self.font_size, self.color)
-            this_y += self.font_size
-        if self.show_cursor and pygame.time.get_ticks() / 500 % 2 == 0:
-            font = pygame.font.Font("Inconsolata.otf", self.font_size)
-            w, h = font.size(self.contents[self.line][:self.char])
-            text = font.render(self.contents[self.line][:self.char], True, self.color)
-
-            y = y + self.line * self.font_size
-            pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
-
+        font = pygame.font.Font("Inconsolata.otf", self.font_size)
+        
+        line_breaks = 0
+        for i, line in enumerate(self.contents):
+            if self.show_cursor and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
+                w, h = font.size(self.contents[self.line][:self.char])
+                pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
+            blit_text(surface, line, x, y, self.font_size, self.color)
+            y += self.font_size
+            
     def insert(self, s):
         """Insert a string at the cursor (as if it were typed)."""
         self.contents[self.line] = (self.contents[self.line][:self.char]
