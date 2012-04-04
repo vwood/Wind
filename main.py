@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #import ode
 #from pgu import gui as pgui
@@ -43,8 +43,23 @@ class Widget(object):
     def get_size(self):
         return (self.width, self.height)
 
-    def display(self, surface, x,):
-        pass
+    def display(self, surface, rect):
+        """TODO: here - flow based layout."""
+        x, y, w, h = rect
+        width_left = w
+        current_y = 0
+        current_x = 0
+        max_height_on_this_line = 0
+        for item in self.selection:
+            if item.width > w or item.width < width_left:
+                item.display(surface, (x, y + current_y, width_left, h))
+                if item.height > max_height_on_this_line:
+                    max_height_on_this_line = item.height
+            else:
+                current_x = 0
+                width_left = w
+                current_y += max_height_on_this_line
+                max_height_on_this_line = 0
 
     def handle(self, event):
         """self.selection handles the event dispatch.
