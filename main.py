@@ -46,21 +46,24 @@ class Widget(object):
     def display(self, surface, rect):
         """TODO: here - flow based layout."""
         x, y, w, h = rect
-        width_left = w
         current_y = 0
         current_x = 0
         max_height_on_this_line = 0
         for item in self.selection:
-            if item.width > w or item.width < width_left:
-                item.display(surface, (x, y + current_y, width_left, h))
+            if item.width + current_x <= w:
+                item.display(surface, (x + current_x, y + current_y,
+                                       min(item.width, w), min(item.height, h - current_y)))
+                current_x += item.width
                 if item.height > max_height_on_this_line:
                     max_height_on_this_line = item.height
             else:
-                current_x = 0
-                width_left = w
+                # Display on next line (this will be same line, at the start)
                 current_y += max_height_on_this_line
-                max_height_on_this_line = 0
-
+                item.display(surface, (x, y + current_y,
+                                       min(item.width, w), min(item.height, h - current_y)))
+                current_x = item.width
+                max_height_on_this_line = item.height
+                
     def handle(self, event):
         """self.selection handles the event dispatch.
         Except for mouse events which go to whatever is clicked upon.
