@@ -11,6 +11,7 @@ def blit_text(surface, text, x, y, font=None, color=(255, 255, 255)):
     pos = text.get_rect(x = x, y = y)
     surface.blit(text, pos)
 
+# TODO: make resizable bit - resize to fit certain windows.
 # TODO: create a proxy surface/view handler
 # TODO: create a tabbed selection widget
 class Widget(object):
@@ -74,7 +75,7 @@ class Widget(object):
 
 class TabbedBox(Widget):
     """A box that uses tabs to contain other widgets."""
-    def __init__(self, width=32, height=1, font_size=12):
+    def __init__(self, width=32, height=1, font_size=14):
         super(TabbedBox, self).__init__()
         self.width, self.height = width, height
         self.font = pygame.font.Font("Inconsolata.otf", font_size)
@@ -96,11 +97,10 @@ class TabbedBox(Widget):
         current_x = x
         for i, item in enumerate(self.contents):
             this_w, _ = self.font.size(item.name)
-            if i != 0:
-                pygame.draw.line(surface, self.back_color,
-                                 (x + current_x, y),
-                                 (x + current_x, y + self.tab_height))
-                current_x += self.tab_spacing
+            pygame.draw.line(surface, self.back_color,
+                             (x + current_x, y),
+                             (x + current_x, y + self.tab_height))
+            current_x += self.tab_spacing
             if item == self.selection:
                 blit_text(surface, item.name, x + current_x, y, self.font, self.fore_color)
             else:
@@ -111,8 +111,8 @@ class TabbedBox(Widget):
             clip = surface.get_clip()
             surface.set_clip(Rect(x, y + self.tab_height,
                                   min(self.selection.width, w), min(self.selection.height, h - self.tab_height)))
-            item.display(surface, x, y + self.tab_height,
-                         min(item.width, w), min(item.height, h - self.tab_height))
+            self.selection.display(surface, x, y + self.tab_height,
+                                   min(item.width, w), min(item.height, h - self.tab_height))
             surface.set_clip(clip)
 
     def handle(self, event):
@@ -157,7 +157,7 @@ class TextBox(Widget):
         line_breaks = 0
         for i, line in enumerate(self.contents):
             if self.show_cursor and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
-                w, h = font.size(self.contents[self.line][:self.char])
+                w, h = self.font.size(self.contents[self.line][:self.char])
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
             blit_text(surface, line, x, y, self.font, self.color)
             y += self.font_size
