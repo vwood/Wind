@@ -1,7 +1,7 @@
 #!/usr/bin/env python2
 
 #
-# Simple example using the engine.
+# Second example using the engine.
 #
 
 import pygame
@@ -26,7 +26,7 @@ class Example(Engine):
         self.textbox4 = TextBox("Sllllloooow.", 640, 20, 14, (100, 200, 200))
         self.textbox4.show_cursor = False
 
-        self.container = Widget(640, 240)
+        self.container = TabbedBox(640, 240)
         self.container.add(self.textbox)
         self.container.add(self.textbox2)
         self.container.add(self.textbox3)
