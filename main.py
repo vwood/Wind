@@ -23,6 +23,7 @@ class Rope(object):
     def __str__(self):
         return "".join(self.contents)
 
+# TODO: create a proxy surface/view handler
 # TODO: create a tabbed selection widget
 class Widget(object):
     """A GUI item.
@@ -52,9 +53,12 @@ class Widget(object):
         max_height_on_this_line = 0
         for item in self.contents:
             if item.width + current_x <= w:
+                clip = surface.get_clip()
+                surface.set_clip(Rect(x + current_x, y + current_y, min(item.width, w), min(item.height, h - current_y)))
                 item.display(surface,
                              x + current_x, y + current_y,
                              min(item.width, w), min(item.height, h - current_y))
+                surface.set_clip(clip)
                 current_x += item.width
                 if item.height > max_height_on_this_line:
                     max_height_on_this_line = item.height
