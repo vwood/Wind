@@ -1,7 +1,6 @@
 #!/usr/bin/env python
 
 #import ode
-#from pgu import gui as pgui
 import pygame
 from pygame.locals import *
 
@@ -256,19 +255,11 @@ class Engine(object):
         self.container.add(self.textbox)
         self.container.add(self.textbox2)
         self.container.add(self.textbox3)
-#        self.gui = pgui.App()
-#        container = pgui.Container()
-#        container.add(pgui.TextArea("", 300, 200, 12), x=0, y=0)
-#        container.add(pgui.TextArea("", 300, 200, 12), x=300, y=0)
-#        self.gui.init(widget = container)
-#        self.gui.run()
         self.display()
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
         self.container.display(self.screen)
-#        self.textbox.display(self.screen, 0, 0)
-#        self.textbox2.display(self.screen, 320, 0)
         pygame.display.flip()
 
     def run(self):
@@ -276,7 +267,6 @@ class Engine(object):
         while True:
             self.display()
             self.clock.tick(60)
-#            self.gui.loop()
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
