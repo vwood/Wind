@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 
 #import ode
 import pygame
@@ -104,7 +104,7 @@ class TextBox(Widget):
         self.color = color
         self.show_cursor = True
         self.read_only = False
-        
+
     def display(self, surface, x, y, w=None, h=None):
         """Display the text box on a surface."""
         font = pygame.font.Font("Inconsolata.otf", self.font_size)
@@ -249,43 +249,45 @@ class Engine(object):
         pygame.key.set_repeat(300, 50)
         if not pygame.font:
             exit()
-        self.screen = pygame.display.set_mode((width, height))
-        pygame.display.set_caption("Engine")
         self.clock = pygame.time.Clock()
-        
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((0, 10, 30))
-        self.textbox = TextBox("You can write here.", 320, 100, 14, (100, 200, 100))
-        self.textbox2 = TextBox("Or here.", 320, 100, 14, (200, 100, 100))
-        self.textbox2.show_cursor = False
-        self.textbox3 = TextBox("Fllllloooow.", 320, 100, 14, (100, 100, 200))
-        self.textbox3.show_cursor = False
-
-        self.container = Widget(640, 240)
-        self.container.add(self.textbox)
-        self.container.add(self.textbox2)
-        self.container.add(self.textbox3)
+        self.updates_per_sec = 60
+        self.screen = pygame.display.set_mode((width, height))
+        self.caption = "Pygame Engine."
+        self.setup()
+        pygame.display.set_caption(self.caption)
         self.display()
 
+    def setup(self):
+        """Run once at start up.
+        Override this."""
+        pass
+        
     def display(self):
-        self.screen.blit(self.background, (0, 0))
-        self.container.display(self.screen)
+        """Run to display everything
+        Override this."""
         pygame.display.flip()
+
+    def update(self):
+        """Run to update everything
+        Override this."""
+        pass
+
+    def handle_events(self, event):
+        """Callback for events
+        Override this."""
+        pass
 
     def run(self):
         """Mainloop for catching events and performing updates."""
         while True:
+            self.update()
             self.display()
-            self.clock.tick(60)
+            self.clock.tick(self.updates_per_sec)
             for event in pygame.event.get():
                 if event.type == QUIT:
                     exit()
-                elif event.type == KEYDOWN:
-                    if event.key == K_ESCAPE:
-                        exit()
-                    else:
-                        self.textbox.handle_keydown(event)
+                else:
+                    self.handle_events(event)
                         
 if __name__ == '__main__':
     e = Engine()
