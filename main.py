@@ -5,11 +5,11 @@ import pygame
 from pygame.locals import *
 
 # TODO: I would prefer objects... with editable text.
-# TODO: Store the font once in resource management (env)
 # TODO: Store list of text, and only rerender when it changes
-def blit_text(surface, text, x, y, size=12, color=(255, 255, 255)):
+def blit_text(surface, text, x, y, font=None, color=(255, 255, 255)):
     """Display a string on a surface centred at x & y."""
-    font = pygame.font.Font("Inconsolata.otf", size)
+    if not font:
+        font = pygame.font.Font(None, 14)
     text = font.render(text, True, color) # True for antialiasing
     pos = text.get_rect(x = x, y = y)
     surface.blit(text, pos)
@@ -93,6 +93,7 @@ class TextBox(Widget):
         super(TextBox, self).__init__()
         self.width, self.height = width, height
         self.contents = contents.split("\n")
+        self.font = pygame.font.Font("Inconsolata.otf", font_size)
         self.font_size = font_size
         self.char = 0
         self.line = 0
@@ -108,7 +109,7 @@ class TextBox(Widget):
             if self.show_cursor and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
                 w, h = font.size(self.contents[self.line][:self.char])
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
-            blit_text(surface, line, x, y, self.font_size, self.color)
+            blit_text(surface, line, x, y, self.font, self.color)
             y += self.font_size
             
     def insert(self, s):
