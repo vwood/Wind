@@ -99,6 +99,7 @@ class TextBox(Widget):
         self.line = 0
         self.color = color
         self.show_cursor = True
+        self.read_only = False
         
     def display(self, surface, x, y, w=None, h=None):
         """Display the text box on a surface."""
@@ -114,6 +115,7 @@ class TextBox(Widget):
             
     def insert(self, s):
         """Insert a string at the cursor (as if it were typed)."""
+        if self.read_only: return
         self.contents[self.line] = (self.contents[self.line][:self.char]
                                     + s
                                     + self.contents[self.line][self.char:])
@@ -121,6 +123,7 @@ class TextBox(Widget):
 
     def insert_newline(self):
         """Insert a newline at the cursor (as if it were typed)."""
+        if self.read_only: return
         self.contents = (self.contents[:self.line]
                          + [self.contents[self.line][:self.char],
                             self.contents[self.line][self.char:]]
@@ -151,6 +154,7 @@ class TextBox(Widget):
             self.line += 1
 
     def delete_char_backwards(self):
+        if self.read_only: return
         if self.char > 0:
             self.contents[self.line] = (self.contents[self.line][:self.char - 1]
                                         + self.contents[self.line][self.char:])
@@ -164,6 +168,7 @@ class TextBox(Widget):
             self.line -= 1
 
     def delete_char_forwards(self):
+        if self.read_only: return
         if self.char < len(self.contents[self.line]):
             self.contents[self.line] = (self.contents[self.line][:self.char]
                                         + self.contents[self.line][self.char + 1:])
@@ -174,6 +179,7 @@ class TextBox(Widget):
                              + self.contents[self.line + 2:])
 
     def delete_til_end_of_line(self):
+        if self.read_only: return
         if self.char < len(self.contents[self.line]):
             self.contents[self.line] = self.contents[self.line][:self.char]
         elif self.line < len(self.contents) - 1:
