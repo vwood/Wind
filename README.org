@@ -1,0 +1,5 @@
+* WIND
+  Currently this is a few widgets for pygame.
+  Think text editing, tabs and containers.
+  Along with a basic game engine class that allows subclasses to just specify setup() display() and update()
+
