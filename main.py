@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 #import ode
 #from pgu import gui as pgui
@@ -8,15 +8,10 @@ from pygame.locals import *
 # TODO: I would prefer objects... with editable text.
 # TODO: Store the font once in resource management (env)
 # TODO: Store list of text, and only rerender when it changes
-def blit_text(surface, text, x=None, y=None, size=12, color=(255, 255, 255)):
-    """Display a string on a surface centred at x & y.
-    If either of x or y are not set, the text is centred on that axis."""
+def blit_text(surface, text, x, y, size=12, color=(255, 255, 255)):
+    """Display a string on a surface centred at x & y."""
     font = pygame.font.Font("Inconsolata.otf", size)
     text = font.render(text, True, color) # True for antialiasing
-    if x == None:
-        x = surface.get_width() / 2
-    if y == None:
-        y = surface.get_height() / 2
     pos = text.get_rect(x = x, y = y)
     surface.blit(text, pos)
 
@@ -29,12 +24,13 @@ class Rope(object):
     def __str__(self):
         return "".join(self.contents)
 
+# TODO: create a tabbed selection widget
 class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
-    def __init__(self):
+    def __init__(self, width=1, height=1):
         self.contents = []
-        self.width, self.height = 1, 1
+        self.width, self.height = width, height
         self.selection = None
 
     def set_size(self, w, h):
@@ -43,24 +39,32 @@ class Widget(object):
     def get_size(self):
         return (self.width, self.height)
 
-    def display(self, surface, rect):
-        """TODO: here - flow based layout."""
-        x, y, w, h = rect
+    def add(self, child):
+        self.contents.append(child)
+
+    def display(self, surface, x=0, y=0, w=None, h=None):
+        """TODO: Calculate positions only if they ever change!
+        Store them for calls like MOUSEBUTTONDOWN..."""
+        if w == None: w = surface.get_width() - x
+        if h == None: h = surface.get_height() - y
+        
         current_y = 0
         current_x = 0
         max_height_on_this_line = 0
-        for item in self.selection:
+        for item in self.contents:
             if item.width + current_x <= w:
-                item.display(surface, (x + current_x, y + current_y,
-                                       min(item.width, w), min(item.height, h - current_y)))
+                item.display(surface,
+                             x + current_x, y + current_y,
+                             min(item.width, w), min(item.height, h - current_y))
                 current_x += item.width
                 if item.height > max_height_on_this_line:
                     max_height_on_this_line = item.height
             else:
                 # Display on next line (this will be same line, at the start)
                 current_y += max_height_on_this_line
-                item.display(surface, (x, y + current_y,
-                                       min(item.width, w), min(item.height, h - current_y)))
+                item.display(surface,
+                             x, y + current_y,
+                             min(item.width, w), min(item.height, h - current_y))
                 current_x = item.width
                 max_height_on_this_line = item.height
                 
@@ -73,17 +77,21 @@ class Widget(object):
         elif event.type == KEYDOWN:
             if self.selection:
                 self.selection.handle(event)
-    
+
 # TODO: Start using editor.py
 # TODO: Text selection    
 # TODO: Line wrap + line maximums (can't just add \n's !)
-# TODO: enforce width and height (screen location)
 # TODO: Simple syntax highlighting (requires meta data)
 # TODO: the contents should be held in a rope with speed up for going up and down lines...
 # TODO: keybindings stored in a dict. (or several dicts.)
+
+# TODO: enforce width and height (screen location)
+# TODO: scroll with wheel mouse
+# TODO: show current view on the side
 class TextBox(Widget):
     """A box that contains text."""
     def __init__(self, contents="", width=32, height=1, font_size=24, color=(255, 255, 255)):
+        super(TextBox, self).__init__()
         self.width, self.height = width, height
         self.contents = contents.split("\n")
         self.font_size = font_size
@@ -92,7 +100,7 @@ class TextBox(Widget):
         self.color = color
         self.show_cursor = True
         
-    def display(self, surface, x, y):
+    def display(self, surface, x, y, w=None, h=None):
         """Display the text box on a surface."""
         font = pygame.font.Font("Inconsolata.otf", self.font_size)
         
@@ -238,9 +246,16 @@ class Engine(object):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = TextBox("You can write here.", 0, 0, 14, (100, 200, 100))
-        self.textbox2 = TextBox("Or here.", 0, 0, 14, (200, 100, 100))
+        self.textbox = TextBox("You can write here.", 320, 100, 14, (100, 200, 100))
+        self.textbox2 = TextBox("Or here.", 320, 100, 14, (200, 100, 100))
         self.textbox2.show_cursor = False
+        self.textbox3 = TextBox("Fllllloooow.", 320, 100, 14, (100, 100, 200))
+        self.textbox3.show_cursor = False
+
+        self.container = Widget(640, 240)
+        self.container.add(self.textbox)
+        self.container.add(self.textbox2)
+        self.container.add(self.textbox3)
 #        self.gui = pgui.App()
 #        container = pgui.Container()
 #        container.add(pgui.TextArea("", 300, 200, 12), x=0, y=0)
@@ -251,8 +266,9 @@ class Engine(object):
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
-        self.textbox.display(self.screen, 0, 0)
-        self.textbox2.display(self.screen, 320, 0)
+        self.container.display(self.screen)
+#        self.textbox.display(self.screen, 0, 0)
+#        self.textbox2.display(self.screen, 320, 0)
         pygame.display.flip()
 
     def run(self):
