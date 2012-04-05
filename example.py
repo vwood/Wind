@@ -4,11 +4,17 @@
 # Simple example using the engine.
 #
 
+import pygame
+from pygame.locals import *
 from main import *
+from widget import *
 
 class Example(Engine):
     def setup(self):
+        # Override some of the stuff in Engine
         self.caption = "Example."
+        self.updates_per_sec = 30
+        
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
