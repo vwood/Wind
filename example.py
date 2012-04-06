@@ -6,8 +6,7 @@
 
 import pygame
 from pygame.locals import *
-from main import *
-from widget import *
+from wind import *
 
 class Example(Engine):
     def setup(self):
@@ -18,12 +17,12 @@ class Example(Engine):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = TextBox("You can write here.", 320, 100, 14, (100, 200, 100))
-        self.textbox2 = TextBox("Or here.", 320, 100, 14, (200, 100, 100))
+        self.textbox = Textbox("You can write here.", 320, 100, 14, (100, 200, 100))
+        self.textbox2 = Textbox("Or here.", 320, 100, 14, (200, 100, 100))
         self.textbox2.show_cursor = False
-        self.textbox3 = TextBox("Fllllloooow.", 320, 100, 14, (100, 100, 200))
+        self.textbox3 = Textbox("Fllllloooow.", 320, 100, 14, (100, 100, 200))
         self.textbox3.show_cursor = False
-        self.textbox4 = TextBox("Sllllloooow.", 640, 20, 14, (100, 200, 200))
+        self.textbox4 = Textbox("Sllllloooow.", 640, 20, 14, (100, 200, 200))
         self.textbox4.show_cursor = False
 
         self.container = Widget(640, 240)
