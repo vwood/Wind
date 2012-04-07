@@ -14,8 +14,8 @@ class Tabbedbox(widget.Widget):
         self.tab_height = font_size + self.tab_spacing
         self.back_color = (120, 120, 200)
         self.fore_color = (200, 120, 120)
-
-    # Again this has calculations that belong elsewhere
+    
+    # This has calculations that belong elsewhere
     # and should be placed elsewhere
     def display(self, surface, x=0, y=0, w=None, h=None):
         """Display the selected widget, and the tabs."""

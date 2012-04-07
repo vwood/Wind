@@ -1,9 +1,9 @@
 import pygame
 from pygame.locals import *
 
+# TODO: go from data structures to GUI
 # TODO: make resizable bit - resize to fit certain windows.
 # TODO: create a proxy surface/view handler
-# TODO: create a tabbed selection widget
 # TODO: Widgets should be resized to fit the available space.
 class Widget(object):
     """A GUI item.
@@ -13,6 +13,7 @@ class Widget(object):
         self.width, self.height = width, height
         self.selection = None
         self.name = "Unnamed"
+        self.sizes = []
 
     def resize(self, w, h):
         self.width, self.height = w, h
