@@ -51,7 +51,6 @@ class Tabbedbox(widget.Widget):
         (Or go to the selection if in that space."""
         if event.type == MOUSEBUTTONDOWN:
             mx, my = event.pos
-            print event.pos
             if my < self.tab_height:
                 for tab in self.contents:
                     tab_width, _ = self.font.size(tab.name)

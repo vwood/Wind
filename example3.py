@@ -39,11 +39,9 @@ class Example(Engine):
         pass
 
     def handle_events(self, event):
-        if event.type == KEYDOWN:
-            if event.key == K_ESCAPE:
-                exit()
-            else:
-                self.textbox.handle_keydown(event)
+        if event.type == KEYDOWN and event.key == K_ESCAPE:
+            exit()
+        self.container.handle(event)
     
 if __name__ == '__main__':
     e = Example()
