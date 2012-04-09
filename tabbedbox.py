@@ -50,7 +50,18 @@ class Tabbedbox(widget.Widget):
         Except for tab mouse events which change the current selection.
         (Or go to the selection if in that space."""
         if event.type == MOUSEBUTTONDOWN:
-            pass
+            mx, my = event.pos
+            print event.pos
+            if my < self.tab_height:
+                for tab in self.contents:
+                    tab_width, _ = self.font.size(tab.name)
+                    tab_width += self.tab_spacing * 2
+                    if mx < tab_width:
+                        self.selection = tab
+                        break
+                    mx -= tab_width
+            else:
+                self.selection.handle(event)
         elif event.type == KEYDOWN:
             if self.selection:
                 self.selection.handle(event)
