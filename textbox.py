@@ -30,7 +30,6 @@ class Textbox(widget.Widget):
         if w == None: w = surface.get_width() - x
         if h == None: h = surface.get_height() - y
         
-        line_breaks = 0
         for i, line in enumerate(self.contents):
             if not self.read_only and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
                 w, h = self.font.size(self.contents[self.line][:self.char])
