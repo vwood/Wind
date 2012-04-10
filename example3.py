@@ -22,7 +22,7 @@ class Example(Engine):
         self.textbox2.show_cursor = False
         self.textbox3 = Textbox("Fllllloooow.", 320, 100, 14, (100, 100, 200))
         self.textbox3.show_cursor = False
-        self.button = Button("Quit", lambda: exit(), 14)
+        self.button = Button("Quit", exit, 14)
 
         self.container = Widget(640, 240)
         self.container.add(self.textbox)

@@ -9,14 +9,18 @@ class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
     def __init__(self, width=1, height=1):
-        self.contents = []
+        self.name = "Unnamed"
+        
         self.width, self.height = width, height
         self.selection = None
-        self.name = "Unnamed"
-        self.sizes = []
+
+        self.contents = []
+        self.contents_positions = []
+        self.positions_are_dirty = False
 
     def resize(self, w, h):
         self.width, self.height = w, h
+        self.positions_are_dirty = True
 
     def get_size(self):
         return (self.width, self.height)
@@ -25,42 +29,49 @@ class Widget(object):
         if len(self.contents) == 0:
             self.selection = child
         self.contents.append(child)
+        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
 
+    def calculate_positions(self, x, y, w, h):
+        # TODO: may need to update if a child resizes
+        if not self.positions_are_dirty: return
+
+        current_x, current_y = 0, 0
+        max_height_on_this_line = 0
+        self.contents_positions = []
+        for i,item in enumerate(self.contents):
+            if item.width + current_x > w:
+                current_y += max_height_on_this_line
+                current_x = 0
+                max_height_on_this_line = 0
+            self.contents_positions.append(Rect(x + current_x, y + current_y,
+                                                min(item.width, w), min(item.height, h - current_y)))
+            current_x += item.width
+            if item.height > max_height_on_this_line:
+                max_height_on_this_line = item.height
+            
     def display(self, surface, x=0, y=0, w=None, h=None):
-        """TODO: Calculate positions only if they ever change!
-        Store them for calls like MOUSEBUTTONDOWN..."""
         if w == None: w = surface.get_width() - x
         if h == None: h = surface.get_height() - y
+
+        self.calculate_positions(x, y, w, h)
         
-        current_y = 0
-        current_x = 0
-        max_height_on_this_line = 0
-        for item in self.contents:
-            if item.width + current_x <= w:
-                clip = surface.get_clip()
-                surface.set_clip(Rect(x + current_x, y + current_y, min(item.width, w), min(item.height, h - current_y)))
-                item.display(surface,
-                             x + current_x, y + current_y,
-                             min(item.width, w), min(item.height, h - current_y))
-                surface.set_clip(clip)
-                current_x += item.width
-                if item.height > max_height_on_this_line:
-                    max_height_on_this_line = item.height
-            else:
-                # Display on next line (this will be same line, at the start)
-                current_y += max_height_on_this_line
-                item.display(surface,
-                             x, y + current_y,
-                             min(item.width, w), min(item.height, h - current_y))
-                current_x = item.width
-                max_height_on_this_line = item.height
+        for item, pos in zip(self.contents, self.contents_positions):
+            x, y, w, h = pos
+            clip = surface.get_clip()
+            surface.set_clip(pos)
+            item.display(surface, x, y, w, h)
+            surface.set_clip(clip)
                 
     def handle(self, event):
         """self.selection handles the event dispatch.
         Except for mouse events which go to whatever is clicked upon.
         Which then changes the current selection."""
         if event.type == MOUSEBUTTONDOWN:
-            pass
+            for i, pos in enumerate(self.contents_positions):
+                if pos.collidepoint(event.pos):
+                    self.selection = self.contents[i]
+                    self.contents[i].handle(event)
+                    return
         elif event.type == KEYDOWN:
             if self.selection:
                 self.selection.handle(event)
