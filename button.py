@@ -3,6 +3,7 @@ from pygame.locals import *
 import widget
 from util import *
 
+# TODO: Support an image rather than text...
 class Button(widget.Widget):
     """A button that uses a callback."""
     def __init__(self, label="", callback = lambda: None, font_size=14):
