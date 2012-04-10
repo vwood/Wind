@@ -23,7 +23,6 @@ class Textbox(widget.Widget):
         self.char = 0
         self.line = 0
         self.color = color
-        self.show_cursor = True
         self.read_only = False
 
     def display(self, surface, x, y, w=None, h=None):
@@ -33,7 +32,7 @@ class Textbox(widget.Widget):
         
         line_breaks = 0
         for i, line in enumerate(self.contents):
-            if self.show_cursor and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
+            if not self.read_only and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
                 w, h = self.font.size(self.contents[self.line][:self.char])
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
             blit_text(surface, line, x, y, self.font, self.color)
