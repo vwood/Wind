@@ -125,7 +125,12 @@ class Textbox(widget.Widget):
         """Overrides the widget method."""
         if event.type == KEYDOWN:
             self.handle_keydown(event)
-        
+        if event.type == MOUSEBUTTONDOWN:
+            if event.button == 4: # Scroll wheel up
+                pass
+            elif event.button == 5: # Scroll wheel down
+                pass
+            
     def handle_keydown(self, event):
         """Handles keydown events given to the TextBox."""
         if event.key == K_RETURN:
