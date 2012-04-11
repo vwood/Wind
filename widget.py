@@ -7,14 +7,17 @@ from pygame.locals import *
 # TODO: Widgets should be resized to fit the available space.
 class Widget(object):
     name = "Unnamed"
+    parent = None
     
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
     def __init__(self, **kwargs):
         """Create a new Widget!
+        parent -> Parent widget
         width, height -> size
         """
         self.width, self.height = kwargs.get('width', 0), kwargs.get('height', 0)
+        self.parent = kwargs.get('parent', None)
         self.selection = None
 
         self.contents = []
