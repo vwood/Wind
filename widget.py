@@ -6,18 +6,20 @@ from pygame.locals import *
 # TODO: create a proxy surface/view handler
 # TODO: Widgets should be resized to fit the available space.
 class Widget(object):
+    """A GUI item.
+    May contain other GUI items. (in a flow based layout)"""
+
     name = "Unnamed"
     parent = None
     
-    """A GUI item.
-    May contain other GUI items. (in a flow based layout)"""
     def __init__(self, **kwargs):
-        """Create a new Widget!
-        parent -> Parent widget
-        width, height -> size
+        """Create a new widget, options are:
+        width, height = size
+        parent = parent widget
         """
         self.width, self.height = kwargs.get('width', 0), kwargs.get('height', 0)
         self.parent = kwargs.get('parent', None)
+
         self.selection = None
 
         self.contents = []
