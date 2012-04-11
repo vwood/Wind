@@ -21,7 +21,7 @@ class Example(Engine):
         self.canvas = Canvas(320, 320)
         self.button = Button("Quit", exit, 14)
 
-        self.container = Widget(640, 320)
+        self.container = Widget(width=640, height=320)
         self.container.add(self.textbox)
         self.container.add(self.button)
 

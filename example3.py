@@ -23,7 +23,7 @@ class Example(Engine):
         self.textbox3.read_only = True
         self.button = Button("Quit", exit, 14)
 
-        self.container = Widget(640, 240)
+        self.container = Widget(width=640, height=240)
         self.container.add(self.textbox)
         self.container.add(self.textbox2)
         self.container.add(self.textbox3)

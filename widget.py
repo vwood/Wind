@@ -8,10 +8,18 @@ from pygame.locals import *
 class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
-    def __init__(self, width=1, height=1):
-        self.name = "Unnamed"
+
+    name = "Unnamed"
+    
+    def __init__(self, **kwargs):
+        """Create a new widget, options are:
+        width, height = size
+        parent = parent widget
+        """
         
-        self.width, self.height = width, height
+        self.width, self.height = kwargs.get('width', 0), kwargs.get('height', 0)
+        self.parent = kwargs.get('parent', None)
+        
         self.selection = None
 
         self.contents = []
