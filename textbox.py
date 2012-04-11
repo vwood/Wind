@@ -17,6 +17,7 @@ class Textbox(widget.Widget):
     def __init__(self, contents="", width=32, height=1, font_size=24, color=(255, 255, 255)):
         super(Textbox, self).__init__()
         self.width, self.height = width, height
+
         self.contents = contents.split("\n")
         self.font = pygame.font.Font("Inconsolata.otf", font_size)
         self.font_size = font_size

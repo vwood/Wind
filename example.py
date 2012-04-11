@@ -24,7 +24,7 @@ class Example(Engine):
         self.textbox4 = Textbox("Sllllloooow.", 640, 20, 14, (100, 200, 200))
         self.textbox4.read_only = True
 
-        self.container = Widget(640, 240)
+        self.container = Widget(width=640, height=240)
         self.container.add(self.textbox)
         self.container.add(self.textbox2)
         self.container.add(self.textbox3)
