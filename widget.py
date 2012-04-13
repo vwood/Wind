@@ -14,13 +14,27 @@ class Widget(object):
     
     def __init__(self, **kwargs):
         """Create a new widget, options are:
+        x, y = position
         width, height = size
-        parent = parent widget, will add to the parent if specified."""
-        self.width, self.height = kwargs.get('width', 0), kwargs.get('height', 0)
+        parent = parent widget, will add to the parent if specified.
+        font = pygame.font object to render text
+        font_size = size of the font
+        color = color of text and other foreground
+        """
+        
+        self.pos = Rect(kwargs.get('x', 0), kwargs.get('y', 0),
+                        kwargs.get('width', 0), kwargs.get('height', 0))
         self.parent = kwargs.get('parent', None)
         if self.parent is not None:
             self.parent.add(self)
 
+        self.font_size = kwargs.get('font_size', 16)
+        if kwargs.has_key('font'):
+            self.font = kwargs['font']
+        else:
+            self.font = pygame.font.Font("Inconsolata.otf", self.font_size)
+        self.color = kwargs.get('color', (255, 255, 255))
+        
         self.selection = None
 
         self.contents = []
@@ -28,11 +42,13 @@ class Widget(object):
         self.positions_are_dirty = False
 
     def resize(self, w, h):
-        self.width, self.height = w, h
+        x, y, _, _ = self.pos
+        self.pos = Rect(x, y, w, h)
         self.positions_are_dirty = True
 
     def get_size(self):
-        return (self.width, self.height)
+        _, _, w, h = self.pos
+        return (w, h)
 
     def add(self, child):
         if len(self.contents) == 0:
@@ -40,37 +56,38 @@ class Widget(object):
         self.contents.append(child)
         self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
 
-    def calculate_positions(self, x, y, w, h):
+    def calculate_positions(self):
         # Update if a child resizes
         if not self.positions_are_dirty: return
 
+        x, y, w, h = self.pos
         current_x, current_y = 0, 0
         max_height_on_this_line = 0
         self.contents_positions = []
         for i,item in enumerate(self.contents):
-            if item.width + current_x > w:
+            ix, iy, iw, ih = item.pos
+            if iw + current_x > w:
                 current_y += max_height_on_this_line
                 current_x = 0
                 max_height_on_this_line = 0
             self.contents_positions.append(Rect(x + current_x, y + current_y,
-                                                min(item.width, w), min(item.height, h - current_y)))
-            current_x += item.width
-            if item.height > max_height_on_this_line:
-                max_height_on_this_line = item.height
+                                                min(iw, w), min(ih, h - current_y)))
+            current_x += iw
+            if ih > max_height_on_this_line:
+                max_height_on_this_line = ih
             
-    def display(self, surface, x=0, y=0, w=None, h=None):
-        if w == None: w = surface.get_width() - x
-        if h == None: h = surface.get_height() - y
+    def display(self, surface):
+        x, y, w, h = self.pos
 
-        self.calculate_positions(x, y, w, h)
+        self.calculate_positions()
         
         for item, pos in zip(self.contents, self.contents_positions):
             x, y, w, h = pos
             clip = surface.get_clip()
             surface.set_clip(pos)
-            item.display(surface, x, y, w, h)
+            item.display(surface)
             surface.set_clip(clip)
-                
+
     def handle(self, event):
         """self.selection handles the event dispatch.
         Except for mouse events which go to whatever is clicked upon.

@@ -4,45 +4,50 @@ import widget
 from util import *
 
 class Tabbedbox(widget.Widget):
-    """A box that uses tabs to contain other widgets."""
-    def __init__(self, width=32, height=1, font_size=14):
-        super(Tabbedbox, self).__init__()
-        self.width, self.height = width, height
-        self.font = pygame.font.Font("Inconsolata.otf", font_size)
-        self.font_size = font_size
+    """A box that uses tabs to contain other widgets.
+
+    keyword options are:
+    
+    width, height = size
+    parent = parent widget
+    font = pygame.font object to render text
+    font_size = size of the font
+    color = color of text and other foreground
+    read_only = Boolean, is the textbox read only?
+    """
+    def __init__(self, **kwargs):
+        super(Tabbedbox, self).__init__(**kwargs)
+
         self.tab_spacing = 4
-        self.tab_height = font_size + self.tab_spacing
-        self.back_color = (120, 120, 200)
-        self.fore_color = (200, 120, 120)
+        self.tab_height = self.font_size + self.tab_spacing
+        self.tab_color = (120, 120, 200)
     
     # This has calculations that belong elsewhere
     # and should be placed elsewhere
-    def display(self, surface, x=0, y=0, w=None, h=None):
+    def display(self, surface):
         """Display the selected widget, and the tabs."""
-        if w == None: w = surface.get_width() - x
-        if h == None: h = surface.get_height() - y
+        x, y, w, h = self.pos
         
-        pygame.draw.line(surface, self.back_color, (x, y + self.tab_height), (x + w, y + self.tab_height))
+        pygame.draw.line(surface, self.tab_color, (x, y + self.tab_height), (x + w, y + self.tab_height))
 
         current_x = x
         for i, item in enumerate(self.contents):
             this_w, _ = self.font.size(item.name)
-            pygame.draw.line(surface, self.back_color,
+            pygame.draw.line(surface, self.tab_color,
                              (x + current_x, y),
                              (x + current_x, y + self.tab_height))
             current_x += self.tab_spacing
             if item == self.selection:
-                blit_text(surface, item.name, x + current_x, y, self.font, self.fore_color)
+                blit_text(surface, item.name, x + current_x, y, self.font, self.color)
             else:
-                blit_text(surface, item.name, x + current_x, y, self.font, self.back_color)
+                blit_text(surface, item.name, x + current_x, y, self.font, self.tab_color)
             current_x += this_w + self.tab_spacing
 
         if self.selection:
             clip = surface.get_clip()
-            surface.set_clip(Rect(x, y + self.tab_height,
-                                  min(self.selection.width, w), min(self.selection.height, h - self.tab_height)))
-            self.selection.display(surface, x, y + self.tab_height,
-                                   min(item.width, w), min(item.height, h - self.tab_height))
+            _, _, s_w, s_h = self.selection.pos
+            surface.set_clip(Rect(x, y + self.tab_height, min(s_w, w), min(s_h, h - self.tab_height)))
+            self.selection.display(surface)
             surface.set_clip(clip)
 
     def handle(self, event):

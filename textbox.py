@@ -23,35 +23,45 @@ class Textbox(widget.Widget):
         
         width, height = size
         parent = parent widget
+        font = pygame.font object to render text
         font_size = size of the font
-        color = color of the text
+        color = color of text and other foreground
         read_only = Boolean, is the textbox read only?
         """
 
         super(Textbox, self).__init__(**kwargs)
 
-        self.contents = contents.split("\n")
-        self.font = pygame.font.Font("Inconsolata.otf", font_size)
+        self.contents = contents.split('\n')
 
-        self.font_size = kwargs.get('font_size', 16)
-        self.color = kwargs.get('color', (255, 255, 255))
         self.read_only = kwargs.get('read_only', False)
-
-        self.char = 0
-        self.line = 0
+        self.point = len(self.contents)
+        self.scroll = 0
         
-    def display(self, surface, x, y, w=None, h=None):
+    def display(self, surface):
         """Display the text box on a surface."""
-        if w == None: w = surface.get_width() - x
-        if h == None: h = surface.get_height() - y
-        
-        for i, line in enumerate(self.contents):
-            if not self.read_only and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
-                w, h = self.font.size(self.contents[self.line][:self.char])
+        x, y, _, _ = self.pos
+
+        point_line = self.point_line()
+        self.skipped_lines = 0
+        for i, line in enumerate(self.contents[self.scroll:]):
+            i += self.scroll
+            if not self.read_only and i == point_line and pygame.time.get_ticks() / 500 % 2 == 0:
+                w, h = self.font.size(self.contents[point_line][:self.point])
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
             blit_text(surface, line, x, y, self.font, self.color)
             y += self.font_size
+
+    def point_line(self, point=None):
+        """Returns the line on which the point is."""
+        if point is None: point = self.point
             
+        total_len = 0
+        for i, line in enumerate(self.contents):
+            total_len += len(line)
+            if self.point <= total_len:
+                return i
+        return total_len
+        
     # EDITOR COMMANDS
     def insert(self, s):
         """Insert a string at the cursor (as if it were typed)."""
@@ -134,6 +144,14 @@ class Textbox(widget.Widget):
     def cursor_end_of_line(self):
         self.char = len(self.contents[self.line])
 
+    def scroll_up(self):
+        if self.scroll > 0:
+            self.scroll -= 1
+        
+    def scroll_down(self):
+        # TODO: bounds checking here
+        self.scroll += 1
+
     # Event Handling
     def handle(self, event):
         """Overrides the widget method."""
@@ -141,9 +159,9 @@ class Textbox(widget.Widget):
             self.handle_keydown(event)
         if event.type == MOUSEBUTTONDOWN:
             if event.button == 4: # Scroll wheel up
-                pass
+                self.scroll_up()
             elif event.button == 5: # Scroll wheel down
-                pass
+                self.scroll_down()
             
     def handle_keydown(self, event):
         """Handles keydown events given to the TextBox."""

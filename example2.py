@@ -22,7 +22,7 @@ class Example(Engine):
         self.textbox3 = Textbox("Fllllloooow.", width=320, height=100, font_size=14, color=(100, 100, 200), read_only=True)
         self.textbox4 = Textbox("Sllllloooow.", width=640, height=20, font_size=14, color=(100, 200, 200), read_only=True)
 
-        self.container = Tabbedbox(640, 240)
+        self.container = Tabbedbox(width=640, height=240)
         self.container.add(self.textbox)
         self.container.add(self.textbox2)
         self.container.add(self.textbox3)
