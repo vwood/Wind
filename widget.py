@@ -15,10 +15,11 @@ class Widget(object):
     def __init__(self, **kwargs):
         """Create a new widget, options are:
         width, height = size
-        parent = parent widget
-        """
+        parent = parent widget, will add to the parent if specified."""
         self.width, self.height = kwargs.get('width', 0), kwargs.get('height', 0)
         self.parent = kwargs.get('parent', None)
+        if self.parent is not None:
+            self.parent.add(self)
 
         self.selection = None
 
@@ -40,7 +41,7 @@ class Widget(object):
         self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
 
     def calculate_positions(self, x, y, w, h):
-        # TODO: may need to update if a child resizes
+        # Update if a child resizes
         if not self.positions_are_dirty: return
 
         current_x, current_y = 0, 0
