@@ -14,18 +14,32 @@ from util import *
 # TODO: show current view on the side
 class Textbox(widget.Widget):
     """A box that contains text."""
-    def __init__(self, contents="", width=32, height=1, font_size=24, color=(255, 255, 255)):
-        super(Textbox, self).__init__()
-        self.width, self.height = width, height
+
+    def __init__(self, contents = "", **kwargs):
+        """Create a new textbox,
+        contents = initial contents
+        
+        keyword options are:
+        
+        width, height = size
+        parent = parent widget
+        font_size = size of the font
+        color = color of the text
+        read_only = Boolean, is the textbox read only?
+        """
+
+        super(Textbox, self).__init__(**kwargs)
 
         self.contents = contents.split("\n")
         self.font = pygame.font.Font("Inconsolata.otf", font_size)
-        self.font_size = font_size
+
+        self.font_size = kwargs.get('font_size', 16)
+        self.color = kwargs.get('color', (255, 255, 255))
+        self.read_only = kwargs.get('read_only', False)
+
         self.char = 0
         self.line = 0
-        self.color = color
-        self.read_only = False
-
+        
     def display(self, surface, x, y, w=None, h=None):
         """Display the text box on a surface."""
         if w == None: w = surface.get_width() - x

@@ -17,7 +17,7 @@ class Example(Engine):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = Textbox("# python goes here", 320, 320, 14, (140, 140, 200))
+        self.textbox = Textbox("# python goes here.", width=320, height=32, font_size=14, color=(140, 140, 200))
         self.canvas = Canvas(320, 320)
         self.button = Button("Quit", exit, 14)
 
