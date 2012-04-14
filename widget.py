@@ -94,14 +94,12 @@ class Widget(object):
                 max_height_on_this_line = ih
             
     def display(self, surface):
-        x, y, w, h = self.pos
         self.calculate_positions()
-        
-        for item, pos in zip(self.contents):
-            clip = surface.get_clip()
-            surface.set_clip(pos)
+        clip = surface.get_clip()
+        surface.set_clip(self.pos)
+        for item in self.contents:
             item.display(surface)
-            surface.set_clip(clip)
+        surface.set_clip(clip)
 
     def handle(self, event):
         """self.selection handles the event dispatch.
