@@ -27,6 +27,8 @@ class Tabbedbox(widget.Widget):
     def display(self, surface):
         """Display the selected widget, and the tabs."""
         x, y, w, h = self.pos
+        clip = surface.get_clip()
+        surface.set_clip(self.pos)
         
         pygame.draw.line(surface, self.tab_color, (x, y + self.tab_height), (x + w, y + self.tab_height))
 
@@ -44,11 +46,11 @@ class Tabbedbox(widget.Widget):
             current_x += this_w + self.tab_spacing
 
         if self.selection:
-            clip = surface.get_clip()
             _, _, s_w, s_h = self.selection.pos
-            surface.set_clip(Rect(x, y + self.tab_height, min(s_w, w), min(s_h, h - self.tab_height)))
+            self.selection.resize(x, y + self.tab_height, min(s_w, w), min(s_h, h - self.tab_height))
             self.selection.display(surface)
-            surface.set_clip(clip)
+            
+        surface.set_clip(clip)
 
     def handle(self, event):
         """self.selection handles the event dispatch.
