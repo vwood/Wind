@@ -35,18 +35,19 @@ class Textbox(widget.Widget):
 
         self.read_only = kwargs.get('read_only', False)
         self.point = len(self.contents)
+        # Cached answer to point_line() queries
+        self.line = self.point_line()
         self.scroll = 0
         
     def display(self, surface):
         """Display the text box on a surface."""
         x, y, _, _ = self.pos
 
-        point_line = self.point_line()
         self.skipped_lines = 0
         for i, line in enumerate(self.contents[self.scroll:]):
             i += self.scroll
-            if not self.read_only and i == point_line and pygame.time.get_ticks() / 500 % 2 == 0:
-                w, h = self.font.size(self.contents[point_line][:self.point])
+            if not self.read_only and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
+                w, h = self.font.size(self.contents[self.line][:self.point])
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
             blit_text(surface, line, x, y, self.font, self.color)
             y += self.font_size
@@ -66,37 +67,37 @@ class Textbox(widget.Widget):
     def insert(self, s):
         """Insert a string at the cursor (as if it were typed)."""
         if self.read_only: return
-        self.contents[self.line] = (self.contents[self.line][:self.char]
+        self.contents[self.line] = (self.contents[self.line][:self.point]
                                     + s
-                                    + self.contents[self.line][self.char:])
-        self.char += len(s)
+                                    + self.contents[self.line][self.point:])
+        self.point += len(s)
 
     def insert_newline(self):
         """Insert a newline at the cursor (as if it were typed)."""
         if self.read_only: return
         self.contents = (self.contents[:self.line]
-                         + [self.contents[self.line][:self.char],
-                            self.contents[self.line][self.char:]]
+                         + [self.contents[self.line][:self.point],
+                            self.contents[self.line][self.point:]]
                          + self.contents[self.line + 1:])
         self.line += 1
-        self.char = 0
+        self.point = 0
 
     def cursor_up(self):
         if self.line > 0:
             self.line -= 1
 
     def cursor_left(self):
-        if self.char > 0:
-            self.char -= 1
+        if self.point > 0:
+            self.point -= 1
         elif self.line > 0:
             self.line -= 1
-            self.char = len(self.contents[self.line])
+            self.point = len(self.contents[self.line])
 
     def cursor_right(self):
-        if self.char <= len(self.contents[self.line]):
-            self.char += 1
+        if self.point <= len(self.contents[self.line]):
+            self.point += 1
         elif self.line < len(self.contents) - 1:
-            self.char = 0
+            self.point = 0
             self.line += 1
 
     def cursor_down(self):
@@ -105,12 +106,12 @@ class Textbox(widget.Widget):
 
     def delete_char_backwards(self):
         if self.read_only: return
-        if self.char > 0:
-            self.contents[self.line] = (self.contents[self.line][:self.char - 1]
-                                        + self.contents[self.line][self.char:])
-            self.char -= 1
+        if self.point > 0:
+            self.contents[self.line] = (self.contents[self.line][:self.point - 1]
+                                        + self.contents[self.line][self.point:])
+            self.point -= 1
         elif self.line > 0:
-            self.char = len(self.contents[self.line - 1])
+            self.point = len(self.contents[self.line - 1])
             self.contents = (self.contents[:self.line - 1]
                              + [self.contents[self.line - 1]
                                 + self.contents[self.line]]
@@ -119,9 +120,9 @@ class Textbox(widget.Widget):
 
     def delete_char_forwards(self):
         if self.read_only: return
-        if self.char < len(self.contents[self.line]):
-            self.contents[self.line] = (self.contents[self.line][:self.char]
-                                        + self.contents[self.line][self.char + 1:])
+        if self.point < len(self.contents[self.line]):
+            self.contents[self.line] = (self.contents[self.line][:self.point]
+                                        + self.contents[self.line][self.point + 1:])
         elif self.line < len(self.contents) - 1:
             self.contents = (self.contents[:self.line]
                              + [self.contents[self.line]
@@ -130,8 +131,8 @@ class Textbox(widget.Widget):
 
     def delete_til_end_of_line(self):
         if self.read_only: return
-        if self.char < len(self.contents[self.line]):
-            self.contents[self.line] = self.contents[self.line][:self.char]
+        if self.point < len(self.contents[self.line]):
+            self.contents[self.line] = self.contents[self.line][:self.point]
         elif self.line < len(self.contents) - 1:
             self.contents = (self.contents[:self.line]
                              + [self.contents[self.line]
@@ -139,10 +140,10 @@ class Textbox(widget.Widget):
                              + self.contents[self.line + 2:])
         
     def cursor_start_of_line(self):
-        self.char = 0
+        self.point = 0
 
     def cursor_end_of_line(self):
-        self.char = len(self.contents[self.line])
+        self.point = len(self.contents[self.line])
 
     def scroll_up(self):
         if self.scroll > 0:
