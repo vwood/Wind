@@ -36,16 +36,13 @@ class Widget(object):
         self.selection = None
 
         self.contents = []
-        self.contents_positions = []
         self.positions_are_dirty = False
 
-    def move(self, x, y):
-        _, _, w, h = self.pos
-        self.pos = Rect(x, y, w, h)
-        self.positions_are_dirty = True
-
-    def resize(self, w, h):
-        x, y, _, _ = self.pos
+    def resize(self, x=None, y=None, w=None, h=None):
+        if x is None: x, _, _, _ = self.pos
+        if y is None: _, y, _, _ = self.pos
+        if w is None: _, _, w, _ = self.pos
+        if h is None: _, _, _, h = self.pos
         self.pos = Rect(x, y, w, h)
         self.positions_are_dirty = True
 
@@ -91,19 +88,16 @@ class Widget(object):
                 current_y += max_height_on_this_line
                 current_x = 0
                 max_height_on_this_line = 0
-            self.contents_positions.append(Rect(x + current_x, y + current_y,
-                                                min(iw, w), min(ih, h - current_y)))
+            item.resize(x + current_x, y + current_y, min(iw, w), min(ih, h - current_y))
             current_x += iw
             if ih > max_height_on_this_line:
                 max_height_on_this_line = ih
             
     def display(self, surface):
         x, y, w, h = self.pos
-
         self.calculate_positions()
         
-        for item, pos in zip(self.contents, self.contents_positions):
-            x, y, w, h = pos
+        for item, pos in zip(self.contents):
             clip = surface.get_clip()
             surface.set_clip(pos)
             item.display(surface)
