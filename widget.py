@@ -2,9 +2,9 @@ import pygame
 from pygame.locals import *
 
 # TODO: go from data structures to GUI
-# TODO: make resizable bit - resize to fit certain windows.
 # TODO: create a proxy surface/view handler
-# TODO: Widgets should be resized to fit the available space.
+# TODO: Widgets should be resized by their parents
+# TODO: Split out the flow-based container stuck inside here
 class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
@@ -24,10 +24,8 @@ class Widget(object):
         
         self.pos = Rect(kwargs.get('x', 0), kwargs.get('y', 0),
                         kwargs.get('width', 0), kwargs.get('height', 0))
-        self.parent = kwargs.get('parent', None)
-        if self.parent is not None:
-            self.parent.add(self)
-
+        self.set_parent(kwargs.get('parent', None))
+        
         self.font_size = kwargs.get('font_size', 16)
         if kwargs.has_key('font'):
             self.font = kwargs['font']
@@ -41,6 +39,11 @@ class Widget(object):
         self.contents_positions = []
         self.positions_are_dirty = False
 
+    def move(self, x, y):
+        _, _, w, h = self.pos
+        self.pos = Rect(x, y, w, h)
+        self.positions_are_dirty = True
+
     def resize(self, w, h):
         x, y, _, _ = self.pos
         self.pos = Rect(x, y, w, h)
@@ -50,10 +53,28 @@ class Widget(object):
         _, _, w, h = self.pos
         return (w, h)
 
+    def set_parent(self, new_parent):
+        if self.parent == new_parent:
+            return
+        if self.parent:
+            self.parent.remove(self)
+        self.parent = new_parent
+        if new_parent:
+            self.parent.add(self)
+    
     def add(self, child):
         if len(self.contents) == 0:
             self.selection = child
+        child.parent = self
         self.contents.append(child)
+        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
+
+    def remove(self, child):
+        if self.selection == child:
+            self.selection = None
+        if child.parent == self:
+            child.parent = None
+        self.contents.remove(child)
         self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
 
     def calculate_positions(self):

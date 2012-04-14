@@ -17,16 +17,30 @@ class Example(Engine):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = Textbox("You can write here.", width=320, height=100, font_size=14, color=(100, 200, 100))
-        self.textbox2 = Textbox("Or here.", width=320, height=100, font_size=14, color=(200, 100, 100))
-        self.textbox3 = Textbox("Fllllloooow.", width=320, height=100, font_size=14, color=(100, 100, 200), read_only=True)
-        self.textbox4 = Textbox("Sllllloooow.", width=640, height=20, font_size=14, color=(100, 200, 200), read_only=True)
-
         self.container = Widget(width=640, height=240)
-        self.container.add(self.textbox)
-        self.container.add(self.textbox2)
-        self.container.add(self.textbox3)
-        self.container.add(self.textbox4)
+        self.textbox = Textbox("You can write here.",
+                               width=320, height=100,
+                               font_size=14,
+                               color=(100, 200, 100),
+                               parent=self.container)
+        self.textbox2 = Textbox("Or here.",
+                                width=320, height=100,
+                                font_size=14,
+                                color=(200, 100, 100),
+                                parent=self.container)
+        self.textbox3 = Textbox("Fllllloooow.",
+                                width=320, height=100,
+                                font_size=14,
+                                color=(100, 100, 200),
+                                parent=self.container,
+                                read_only=True)
+        self.textbox4 = Textbox("Sllllloooow.",
+                                width=640,
+                                height=20,
+                                font_size=14,
+                                color=(100, 200, 200),
+                                parent=self.container,
+                                read_only=True)
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
