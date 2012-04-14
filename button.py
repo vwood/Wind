@@ -6,16 +6,14 @@ from util import *
 # TODO: Support an image rather than text...
 class Button(widget.Widget):
     """A button that uses a callback."""
-    def __init__(self, label="", callback = lambda: None, font_size=14):
-        super(Button, self).__init__()
-        self.font = pygame.font.Font("Inconsolata.otf", font_size)
-        self.font_size = font_size
+    def __init__(self, label="", callback = lambda: None, **kwargs):
+        super(Button, self).__init__(kwargs)
+
         self.width, self.height = self.font.size(label)
         self.padding = 4
         self.width += self.padding * 2
         self.height += self.padding * 2
         self.back_color = (120, 120, 200)
-        self.fore_color = (200, 120, 120)
         self.label = label
         self.callback = callback
 
@@ -25,7 +23,7 @@ class Button(widget.Widget):
         if h == None: h = surface.get_height() - y
         
         pygame.draw.rect(surface, self.back_color, Rect(x, y, w - 1, h - 1), 2)
-        blit_text(surface, self.label, x + self.padding, y + self.padding, self.font, self.fore_color)
+        blit_text(surface, self.label, x + self.padding, y + self.padding, self.font, self.color)
 
     def handle(self, event):
         """self.selection handles the event dispatch.
