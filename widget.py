@@ -3,7 +3,6 @@ from pygame.locals import *
 
 # TODO: go from data structures to GUI
 # TODO: create a proxy surface/view handler
-# TODO: Widgets should be resized by their parents
 # TODO: Split out the flow-based container stuck inside here
 class Widget(object):
     """A GUI item.
