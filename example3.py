@@ -34,9 +34,14 @@ class Example(Engine):
                                 color=(100, 100, 200),
                                 parent=self.container,
                                 read_only=True)
-        self.button = Button("Quit", exit,
+        self.button = Button(label="Quit",
+                             callback=exit,
                              font_size=14,
                              parent=self.container)
+        self.button2 = Button(image=pygame.image.load("button_purple.png").convert_alpha(),
+                              callback=exit,
+                              padding=0,
+                              parent=self.container)
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
