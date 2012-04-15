@@ -41,7 +41,7 @@ class Example(Engine):
                              callback=exit,
                              font_size=14,
                              parent=self.container)
-        self.button2 = Button(image=pygame.image.load("button_purple.png").convert_alpha(),
+        self.button2 = Button(image=pygame.image.load("resources/button_purple.png").convert_alpha(),
                               callback=exit,
                               padding=0,
                               parent=self.container)

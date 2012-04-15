@@ -29,7 +29,7 @@ class Widget(object):
         if kwargs.has_key('font'):
             self.font = kwargs['font']
         else:
-            self.font = pygame.font.Font("Inconsolata.otf", self.font_size)
+            self.font = pygame.font.Font("resources/Inconsolata.otf", self.font_size)
         self.color = kwargs.get('color', (255, 255, 255))
         
         self.selection = None
