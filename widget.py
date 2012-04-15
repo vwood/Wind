@@ -46,9 +46,8 @@ class Widget(object):
         self.pos = Rect(x, y, w, h)
         self.positions_are_dirty = True
 
-    def get_size(self):
-        _, _, w, h = self.pos
-        return (w, h)
+    def get_rect(self):
+        return self.pos
 
     def set_parent(self, new_parent):
         if self.parent == new_parent:
@@ -106,10 +105,10 @@ class Widget(object):
         Except for mouse events which go to whatever is clicked upon.
         Which then changes the current selection."""
         if event.type == MOUSEBUTTONDOWN:
-            for i, pos in enumerate(self.contents_positions):
-                if pos.collidepoint(event.pos):
-                    self.selection = self.contents[i]
-                    self.contents[i].handle(event)
+            for item in self.contents:
+                if item.get_rect().collidepoint(event.pos):
+                    self.selection = item
+                    item.handle(event)
                     return
         elif event.type == KEYDOWN:
             if self.selection:
