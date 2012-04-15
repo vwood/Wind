@@ -9,9 +9,9 @@ class Button(widget.Widget):
     def __init__(self, label="", callback = lambda: None, **kwargs):
         super(Button, self).__init__(**kwargs)
 
-        w, h = self.font.size(label)
         self.padding = 4
-        self.resize(w + self.padding * 2,h + self.padding * 2)
+        w, h = self.font.size(label)
+        self.resize(w=w + self.padding * 2, h=h + self.padding * 2)
 
         self.back_color = (120, 120, 200)
         self.label = label
