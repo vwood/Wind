@@ -3,11 +3,9 @@ from pygame.locals import *
 import widget
 from util import *
 
-# TODO: Support an image rather than text...
 # TODO: Add CBARGS to callback
 class Button(widget.Widget):
-    """A button that uses a callback.
-    """
+    """A button that uses a callback."""
     def __init__(self,  **kwargs):
         """Create a new button, options are:
         x, y = position
