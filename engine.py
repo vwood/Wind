@@ -4,15 +4,6 @@
 import pygame
 from pygame.locals import *
 
-class Rope(object):
-    """Concatenation tree for strings."""
-    def __init__(self):
-        self.contents = []
-        self.lengths = []
-
-    def __str__(self):
-        return "".join(self.contents)
-    
 class Engine(object):
     """Base engine for running the system."""
     def __init__(self, width=640, height=240):
