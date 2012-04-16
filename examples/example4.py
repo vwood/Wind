@@ -20,13 +20,17 @@ class Example(Engine):
         self.background = pygame.Surface(self.screen.get_size())
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
-        self.textbox = Textbox("# python goes here.", width=320, height=32, font_size=14, color=(140, 140, 200))
-        self.canvas = Canvas(width=320, height=320)
-        self.button = Button(label="Quit", callback=exit)
-
-        self.container = Widget(width=640, height=320)
-        self.container.add(self.textbox)
-        self.container.add(self.button)
+        self.container = Widget(width=640, height=360)
+        self.textbox = Textbox("# python goes here.",
+                               width=320, height=320,
+                               parent=self.container,
+                               font_size=14,
+                               color=(140, 140, 200))
+        self.canvas = Canvas(width=320, height=320,
+                             parent=self.container)
+        self.button = Button(label="run",
+                             callback=exit,
+                             parent=self.container)
 
     def display(self):
         self.screen.blit(self.background, (0, 0))
@@ -42,5 +46,5 @@ class Example(Engine):
         self.container.handle(event)
     
 if __name__ == '__main__':
-    e = Example()
+    e = Example(width=640, height=360)
     e.run()
