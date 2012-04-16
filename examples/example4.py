@@ -21,8 +21,8 @@ class Example(Engine):
         self.background = self.background.convert()
         self.background.fill((0, 10, 30))
         self.textbox = Textbox("# python goes here.", width=320, height=32, font_size=14, color=(140, 140, 200))
-        self.canvas = Canvas(320, 320)
-        self.button = Button("Quit", exit, 14)
+        self.canvas = Canvas(width=320, height=320)
+        self.button = Button(label="Quit", callback=exit)
 
         self.container = Widget(width=640, height=320)
         self.container.add(self.textbox)
