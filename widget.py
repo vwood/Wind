@@ -87,9 +87,12 @@ class Widget(object):
                 current_x = 0
                 max_height_on_this_line = 0
             item.resize(x + current_x, y + current_y, min(iw, w), min(ih, h - current_y))
+
             current_x += iw
             if ih > max_height_on_this_line:
                 max_height_on_this_line = ih
+
+        self.positions_are_dirty = False
             
     def display(self, surface):
         self.calculate_positions()

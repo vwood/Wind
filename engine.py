@@ -5,6 +5,8 @@ import pygame
 from pygame.locals import *
 
 class Engine(object):
+    contents = None
+
     """Base engine for running the system."""
     def __init__(self, width=640, height=240):
         super(Engine, self).__init__()
@@ -14,12 +16,24 @@ class Engine(object):
             exit()
         self.clock = pygame.time.Clock()
         self.updates_per_sec = 60
+        self.pos = Rect(0, 0, width, height)
         self.screen = pygame.display.set_mode((width, height))
         self.caption = "Pygame Engine."
-        self.setup()
         pygame.display.set_caption(self.caption)
-        self.display()
+        self.setup()
+        
+        self.background = pygame.Surface(self.screen.get_size())
+        self.background = self.background.convert()
+        self.background.fill((0, 0, 0))
 
+        self.display()
+        
+    def add(self, child):
+        print child
+        self.contents = child
+        print self, child, self.contents
+        self.contents.resize(*self.pos)
+        
     def setup(self):
         """Run once at start up.
         Override this."""
@@ -27,8 +41,8 @@ class Engine(object):
         
     def display(self):
         """Run to display everything
-        Override this."""
-        pygame.display.flip()
+        You can override this."""
+        pass
 
     def update(self):
         """Run to update everything
@@ -44,7 +58,11 @@ class Engine(object):
         """Mainloop for catching events and performing updates."""
         while True:
             self.update()
+            if self.contents:
+                self.screen.blit(self.background, (0, 0))
+                self.contents.display(self.screen)
             self.display()
+            pygame.display.flip()
             self.clock.tick(self.updates_per_sec)
             for event in pygame.event.get():
                 if event.type == QUIT:

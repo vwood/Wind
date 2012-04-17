@@ -17,10 +17,7 @@ class Example(Engine):
         self.caption = "Example."
         self.updates_per_sec = 30
         
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((0, 10, 30))
-        self.container = Widget(width=640, height=360)
+        self.container = Widget(parent=self)
         self.textbox = Textbox("# python goes here.",
                                width=320, height=320,
                                parent=self.container,
@@ -28,14 +25,17 @@ class Example(Engine):
                                color=(140, 140, 200))
         self.canvas = Canvas(width=320, height=320,
                              parent=self.container)
+        self.resultbox = Textbox("Result goes here.",
+                                 width=640, height=32,
+                                 font_size=14,
+                                 read_only=True,
+                                 parent=self.container)
         self.button = Button(label="run",
                              callback=exit,
                              parent=self.container)
 
     def display(self):
-        self.screen.blit(self.background, (0, 0))
-        self.container.display(self.screen)
-        pygame.display.flip()
+        pass
 
     def update(self):
         pass
@@ -46,5 +46,5 @@ class Example(Engine):
         self.container.handle(event)
     
 if __name__ == '__main__':
-    e = Example(width=640, height=360)
+    e = Example(width=640, height=420)
     e.run()

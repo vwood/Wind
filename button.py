@@ -25,7 +25,7 @@ class Button(widget.Widget):
 
         self.image = kwargs.get('image', None)
         self.label = kwargs.get('label', "")
-        
+
         if self.image:
             self.is_text_button = False
             w, h = self.image.get_size()
