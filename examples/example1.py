@@ -17,10 +17,7 @@ class Example(Engine):
         self.caption = "Example."
         self.updates_per_sec = 30
         
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((0, 10, 30))
-        self.container = Widget(width=640, height=240)
+        self.container = Widget(parent=self)
         self.textbox = Textbox("You can write here.",
                                width=320, height=100,
                                font_size=14,
@@ -46,9 +43,7 @@ class Example(Engine):
                                 read_only=True)
 
     def display(self):
-        self.screen.blit(self.background, (0, 0))
-        self.container.display(self.screen)
-        pygame.display.flip()
+        pass
 
     def update(self):
         pass
@@ -59,6 +54,6 @@ class Example(Engine):
         self.container.handle(event)
     
 if __name__ == '__main__':
-    e = Example()
+    e = Example(width=640, height=240, back_color=(0,10,30))
     e.run()
 
