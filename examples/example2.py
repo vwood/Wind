@@ -9,18 +9,15 @@ from pygame.locals import *
 
 import sys; sys.path.insert(0, '..')
 
-from wind import *
+from __init__ import *
 
-class Example(Engine):
-    def setup(self):
+class Example(Game):
+    def setup(self, root):
         # Override some of the stuff in Engine
         self.caption = "Example."
         self.updates_per_sec = 30
         
-        self.background = pygame.Surface(self.screen.get_size())
-        self.background = self.background.convert()
-        self.background.fill((0, 10, 30))
-        self.container = Tabbedbox(width=640, height=240)
+        self.container = Tabbedbox(parent=root)
         self.textbox = Textbox("You can write here.",
                                width=320, height=100,
                                font_size=14,
@@ -47,19 +44,17 @@ class Example(Engine):
                                 read_only=True)
 
     def display(self):
-        self.screen.blit(self.background, (0, 0))
-        self.container.display(self.screen)
-        pygame.display.flip()
+        pass
 
     def update(self):
         pass
 
-    def handle_events(self, event):
+    def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_ESCAPE:
                 exit()
         self.container.handle(event)
     
 if __name__ == '__main__':
-    e = Example()
-    e.run()
+    Engine(width=320, height=480, back_color=(30,10,0), game=Example()).run()
+
 
