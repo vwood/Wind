@@ -8,7 +8,6 @@ from util import *
 # TODO: Simple syntax highlighting (requires meta data)
 # TODO: the contents should be held in a rope with speed up for going up and down lines...
 # TODO: keybindings stored in a dict. (or several dicts.)
-
 # TODO: enforce width and height (screen location)
 # TODO: scroll with wheel mouse
 # TODO: show current view on the side
@@ -150,8 +149,8 @@ class Textbox(widget.Widget):
             self.scroll -= 1
         
     def scroll_down(self):
-        # TODO: bounds checking here
-        self.scroll += 1
+        if self.scroll < len(self.contents) - 1:
+            self.scroll += 1
 
     # Event Handling
     def handle(self, event):
