@@ -4,6 +4,7 @@ from pygame.locals import *
 # TODO: go from data structures to GUI
 # TODO: create a proxy surface/view handler
 # TODO: Split out the flow-based container stuck inside here
+# TODO: allow for styling/themes (inherit theme from parent.)
 class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
