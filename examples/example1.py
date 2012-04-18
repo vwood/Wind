@@ -8,8 +8,11 @@ import pygame
 from pygame.locals import *
 
 import sys; sys.path.insert(0, '..')
+if sys.version_info < (2, 7):
+    from __init__ import *
+else:
+    from wind import *
 
-from wind import *
 
 class Example(Game):
     def setup(self, root):
