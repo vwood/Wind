@@ -9,7 +9,7 @@ from pygame.locals import *
 
 import sys; sys.path.insert(0, '..')
 
-from __init__ import *
+from wind import *
 
 class Example(Engine):
     def setup(self, root):
