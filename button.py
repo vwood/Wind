@@ -6,6 +6,9 @@ from util import *
 # TODO: Add CBARGS to callback
 class Button(widget.Widget):
     """A button that uses a callback."""
+
+    focusable = False
+    
     def __init__(self,  **kwargs):
         """Create a new button, options are:
         x, y = position

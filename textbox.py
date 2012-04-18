@@ -30,6 +30,9 @@ class Textbox(widget.Widget):
         self.contents = contents.split('\n')
 
         self.read_only = kwargs.get('read_only', False)
+        if self.read_only:
+            self.focusable = False
+        
         self.point = len(self.contents)
         # Cached answer to point_line() queries
         self.line = self.point_line()

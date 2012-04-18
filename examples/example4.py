@@ -27,7 +27,12 @@ class Example(Game):
         self.canvas = Canvas(width=320, height=320,
                              parent=self.container)
         self.resultbox = Textbox("Result goes here.",
-                                 width=640, height=32,
+                                 width=320, height=32,
+                                 font_size=14,
+                                 read_only=True,
+                                 parent=self.container)
+        self.buttonbox = Textbox("Crap goes here.",
+                                 width=320, height=32,
                                  font_size=14,
                                  read_only=True,
                                  parent=self.container)
@@ -44,7 +49,12 @@ class Example(Game):
 
     def push_button(self):
         self.pushes += 1
-        self.resultbox.set_text("pushed button %d times." % (self.pushes,))
+        self.buttonbox.set_text("pushed button %d times." % (self.pushes,))
+        try:
+            self.resultbox.set_text(str(eval(self.textbox.get_text())))
+        except Exception as e:
+            self.resultbox.set_text(str(e))
+        
 
     def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_ESCAPE:
@@ -53,4 +63,3 @@ class Example(Game):
     
 if __name__ == '__main__':
     Engine(width=640, height=420, game=Example()).run()
-

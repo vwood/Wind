@@ -10,6 +10,7 @@ class Widget(object):
 
     name = "Unnamed"
     parent = None
+    focusable = True
     
     def __init__(self, **kwargs):
         """Create a new widget, options are:
@@ -109,7 +110,8 @@ class Widget(object):
         if event.type == MOUSEBUTTONDOWN:
             for item in self.contents:
                 if item.get_rect().collidepoint(event.pos):
-                    self.selection = item
+                    if item.focusable:
+                        self.selection = item
                     item.handle(event)
                     return
         elif event.type == KEYDOWN:
