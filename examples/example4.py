@@ -32,14 +32,19 @@ class Example(Game):
                                  read_only=True,
                                  parent=self.container)
         self.button = Button(label="run",
-                             callback=exit,
+                             callback=self.push_button,
                              parent=self.container)
+        self.pushes = 0
 
     def display(self):
         pass
 
     def update(self):
         pass
+
+    def push_button(self):
+        self.pushes += 1
+        self.resultbox.set_text("pushed button %d times." % (self.pushes,))
 
     def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_ESCAPE:

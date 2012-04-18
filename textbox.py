@@ -4,11 +4,8 @@ from util import *
 
 # TODO: Start using editor.py
 # TODO: Text selection    
-# TODO: Line wrap + line maximums (can't just add \n's !)
 # TODO: Simple syntax highlighting (requires meta data)
-# TODO: the contents should be held in a rope with speed up for going up and down lines...
 # TODO: keybindings stored in a dict. (or several dicts.)
-# TODO: enforce width and height (screen location)
 # TODO: scroll with wheel mouse
 # TODO: show current view on the side
 class Textbox(widget.Widget):
@@ -40,8 +37,10 @@ class Textbox(widget.Widget):
         
     def display(self, surface):
         """Display the text box on a surface."""
-        x, y, _, _ = self.pos
+        clip = surface.get_clip()
+        surface.set_clip(self.pos)
 
+        x, y, _, _ = self.pos
         self.skipped_lines = 0
         for i, line in enumerate(self.contents[self.scroll:]):
             i += self.scroll
@@ -50,6 +49,7 @@ class Textbox(widget.Widget):
                 pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
             blit_text(surface, line, x, y, self.font, self.color)
             y += self.font_size
+        surface.set_clip(clip)
 
     def point_line(self, point=None):
         """Returns the line on which the point is."""
@@ -61,7 +61,15 @@ class Textbox(widget.Widget):
             if self.point <= total_len:
                 return i
         return total_len
-        
+
+    def set_text(self, string):
+        self.contents = string.split('\n')
+        self.point = len(self.contents)
+        self.line = self.point_line()
+
+    def get_text(self):
+        return "\n".join(self.contents)
+    
     # EDITOR COMMANDS
     def insert(self, s):
         """Insert a string at the cursor (as if it were typed)."""
@@ -144,6 +152,9 @@ class Textbox(widget.Widget):
     def cursor_end_of_line(self):
         self.point = len(self.contents[self.line])
 
+    def scroll_to_point(self):
+        self.scroll = self.line
+
     def scroll_up(self):
         if self.scroll > 0:
             self.scroll -= 1
@@ -198,5 +209,7 @@ class Textbox(widget.Widget):
                 self.cursor_left()
             elif event.key == ord('f'):
                 self.cursor_right()
+            elif event.key == ord('l'):
+                self.scroll_to_point()
         else:
             self.insert(event.unicode)
