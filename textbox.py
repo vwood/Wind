@@ -2,12 +2,11 @@ import pygame
 import widget
 from util import *
 
-# TODO: Start using editor.py
 # TODO: Text selection    
 # TODO: Simple syntax highlighting (requires meta data)
 # TODO: keybindings stored in a dict. (or several dicts.)
 # TODO: scroll with wheel mouse
-# TODO: show current view on the side
+# TODO: append killed region if last command was also a kill
 class Textbox(widget.Widget):
     """A box that contains text."""
 
@@ -28,14 +27,15 @@ class Textbox(widget.Widget):
         super(Textbox, self).__init__(**kwargs)
 
         self.contents = contents.split('\n')
-
+        self.clipboard = ''
+        
         self.read_only = kwargs.get('read_only', False)
         if self.read_only:
             self.focusable = False
         
         self.point = len(self.contents)
-        # Cached answer to point_line() queries
-        self.line = self.point_line()
+
+        self.line = self.point_line()        # Cached answer to point_line() queries
         self.scroll = 0
         
     def display(self, surface):
@@ -82,13 +82,21 @@ class Textbox(widget.Widget):
         return "\n".join(self.contents)
     
     # EDITOR COMMANDS
-    def insert(self, s):
-        """Insert a string at the cursor (as if it were typed)."""
+    def insert_no_newlines(self, s):
+        """Insert a string without newlines at the cursor (as if it were typed)."""
         if self.read_only: return
         self.contents[self.line] = (self.contents[self.line][:self.point]
                                     + s
                                     + self.contents[self.line][self.point:])
         self.point += len(s)
+
+    def insert(self, s):
+        """Insert a string at the cursor (as if it were typed)."""
+        if self.read_only: return
+        for i, line in enumerate(s.split('\n')):
+            if i != 0:
+                self.insert_newline()
+            self.insert_no_newlines(line)
 
     def insert_newline(self):
         """Insert a newline at the cursor (as if it were typed)."""
@@ -150,13 +158,19 @@ class Textbox(widget.Widget):
     def delete_til_end_of_line(self):
         if self.read_only: return
         if self.point < len(self.contents[self.line]):
+            self.clipboard = self.contents[self.line][self.point:]
             self.contents[self.line] = self.contents[self.line][:self.point]
         elif self.line < len(self.contents) - 1:
+            self.clipboard = '\n'
             self.contents = (self.contents[:self.line]
                              + [self.contents[self.line]
                                 + self.contents[self.line + 1]]
                              + self.contents[self.line + 2:])
-        
+
+    def yank(self):
+        print self.clipboard
+        self.insert(self.clipboard)
+
     def cursor_start_of_line(self):
         self.point = 0
 
@@ -210,6 +224,8 @@ class Textbox(widget.Widget):
                 self.delete_char_forwards()
             elif event.key == ord('k'):
                 self.delete_til_end_of_line()
+            elif event.key == ord('y'):
+                self.yank()
             elif event.key == ord('e'):
                 self.cursor_end_of_line()
             elif event.key == ord('n'):
@@ -223,4 +239,4 @@ class Textbox(widget.Widget):
             elif event.key == ord('l'):
                 self.scroll_to_point()
         else:
-            self.insert(event.unicode)
+            self.insert_no_newlines(event.unicode)
