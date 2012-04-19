@@ -6,8 +6,6 @@ from pygame.locals import *
 import game
 
 
-# TODO: there's a window widget trapped in here,
-# along with a game runner. Separate them.
 class Engine(object):
     contents = None
     

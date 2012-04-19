@@ -1,0 +1,21 @@
+* TODOlist items take from the source code:
+** TODO textbox: Text selection    
+** TODO textbox: Simple syntax highlighting (requires meta data)
+** TODO textbox: keybindings stored in a dict. (or several dicts.)
+** TODO textbox: scroll with wheel mouse
+** TODO textbox: append killed region if last command was also a kill
+** TODO button: Add CBARGS to callback
+** TODO canvas: self.contents should be some sort of spatial hash
+** TODO canvas.add(): perhaps just calculate the new items' position rather than set positions_are_dirty
+** TODO canvas.remove(): perhaps just calculate the items' positions after the removed item rather than set positions_are_dirty
+** TODO engine: there's a window/root widget trapped in here
+** TODO util.blit_text: I would prefer objects... with editable text.
+** TODO util.blit_text: Store list of text, and only rerender when it changes
+** TODO widget: go from data structures to GUI
+** TODO widget: create a proxy surface/view handler
+** TODO widget: Split out the flow-based container stuck inside here
+** TODO widget: allow for styling/themes (inherit theme from parent.)
+** TODO widget.add: perhaps just calculate the new items' position rather than set positions_are_dirty
+** TODO widget.remove: perhaps just calculate the new items' after positions rather than set positions_are_dirty
+
+

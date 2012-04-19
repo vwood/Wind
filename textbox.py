@@ -2,11 +2,6 @@ import pygame
 import widget
 from util import *
 
-# TODO: Text selection    
-# TODO: Simple syntax highlighting (requires meta data)
-# TODO: keybindings stored in a dict. (or several dicts.)
-# TODO: scroll with wheel mouse
-# TODO: append killed region if last command was also a kill
 class Textbox(widget.Widget):
     """A box that contains text."""
 

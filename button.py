@@ -3,7 +3,6 @@ from pygame.locals import *
 import widget
 from util import *
 
-# TODO: Add CBARGS to callback
 class Button(widget.Widget):
     """A button that uses a callback."""
 

@@ -1,10 +1,6 @@
 import pygame
 from pygame.locals import *
 
-# TODO: go from data structures to GUI
-# TODO: create a proxy surface/view handler
-# TODO: Split out the flow-based container stuck inside here
-# TODO: allow for styling/themes (inherit theme from parent.)
 class Widget(object):
     """A GUI item.
     May contain other GUI items. (in a flow based layout)"""
@@ -64,7 +60,7 @@ class Widget(object):
             self.selection = child
         child.parent = self
         self.contents.append(child)
-        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
+        self.positions_are_dirty = True
 
     def remove(self, child):
         if self.selection == child:
@@ -72,7 +68,7 @@ class Widget(object):
         if child.parent == self:
             child.parent = None
         self.contents.remove(child)
-        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
+        self.positions_are_dirty = True
 
     def calculate_positions(self):
         # Update if a child resizes
