@@ -43,15 +43,23 @@ class Textbox(widget.Widget):
         clip = surface.get_clip()
         surface.set_clip(self.pos)
 
-        x, y, _, _ = self.pos
+        x, y, w, h = self.pos
+        current_y = y
         self.skipped_lines = 0
         for i, line in enumerate(self.contents[self.scroll:]):
             i += self.scroll
             if not self.read_only and i == self.line and pygame.time.get_ticks() / 500 % 2 == 0:
-                w, h = self.font.size(self.contents[self.line][:self.point])
-                pygame.draw.line(surface, self.color, (x+w, y), (x+w, y+h))
-            blit_text(surface, line, x, y, self.font, self.color)
-            y += self.font_size
+                lw, lh = self.font.size(self.contents[self.line][:self.point])
+                pygame.draw.line(surface, self.color, (x+lw, current_y), (x+lw, current_y+lh))
+            blit_text(surface, line, x, current_y, self.font, self.color)
+            current_y += self.font_size
+            if current_y > y+h:
+                break
+
+        if i - self.scroll < len(self.contents) - 1:
+            start_y = h * self.scroll / len(self.contents)
+            end_y = h * (i + 1) / len(self.contents)
+            pygame.draw.line(surface, self.color, (x+w-2, y+start_y), (x+w-2, y+end_y))
         surface.set_clip(clip)
 
     def point_line(self, point=None):

@@ -13,6 +13,8 @@ if sys.version_info < (2, 7):
 else:
     from wind import *
 
+from StringIO import StringIO
+    
 class Example(Game):
     def setup(self, root):
         # Override some of the stuff in Engine
@@ -50,11 +52,18 @@ class Example(Game):
     def push_button(self):
         self.pushes += 1
         self.buttonbox.set_text("pushed button %d times." % (self.pushes,))
+
+        buffer = StringIO()
+        old_stdout = sys
+        sys.stdout = buffer
+
         try:
-            self.resultbox.set_text(str(eval(self.textbox.get_text())))
+            exec self.textbox.get_text()
+            self.resultbox.set_text(buffer.getvalue())
         except Exception as e:
             self.resultbox.set_text(str(e))
-        
+
+        sys.stdout = old_stdout
 
     def handle_event(self, event):
         if event.type == KEYDOWN and event.key == K_ESCAPE:
