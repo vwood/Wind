@@ -16,14 +16,13 @@ class Canvas(widget.Widget):
         color = color of text and other foreground
         """
         super(Canvas, self).__init__(**kwargs)        
-        # TODO: self.contents should be some sort of spatial hash
         
     def add(self, child):
         if len(self.contents) == 0:
             self.selection = child
         child.parent = self
         self.contents.append(child)
-        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
+        self.positions_are_dirty = True
 
     def remove(self, child):
         if self.selection == child:
@@ -31,7 +30,7 @@ class Canvas(widget.Widget):
         if child.parent == self:
             child.parent = None
         self.contents.remove(child)
-        self.positions_are_dirty = True # TODO: perhaps just calculate the new items' position
+        self.positions_are_dirty = True
 
     def display(self, surface):
         clip = surface.get_clip()
