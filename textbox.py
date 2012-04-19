@@ -53,7 +53,7 @@ class Textbox(widget.Widget):
                 pygame.draw.line(surface, self.color, (x+lw, current_y), (x+lw, current_y+lh))
             blit_text(surface, line, x, current_y, self.font, self.color)
             current_y += self.font_size
-            if current_y > y+h:
+            if current_y + self.font_size > y+h:
                 break
 
         if i - self.scroll < len(self.contents) - 1:
