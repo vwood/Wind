@@ -33,7 +33,7 @@ class Textbox(widget.Widget):
         if self.read_only:
             self.focusable = False
         
-        self.point = len(self.contents)
+        self.point = len(contents)
 
         self.line = self.point_line()        # Cached answer to point_line() queries
         self.scroll = 0

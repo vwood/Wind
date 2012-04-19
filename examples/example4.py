@@ -21,7 +21,7 @@ class Example(Game):
         self.caption = "Example."
         self.updates_per_sec = 30
         self.container = Widget(parent=root)
-        self.textbox = Textbox("# python goes here.",
+        self.textbox = Textbox("# python goes here.\nprint \"hello, world!\"",
                                width=320, height=320,
                                parent=self.container,
                                font_size=14,
@@ -36,6 +36,7 @@ class Example(Game):
         self.button = Button(label="run",
                              callback=self.push_button,
                              parent=self.container)
+        Widget(width=16, parent=self.container) # Spacing
         self.buttonbox = Textbox("Crap goes here.",
                                  width=320, height=32,
                                  font_size=14,
