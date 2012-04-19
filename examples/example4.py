@@ -29,18 +29,18 @@ class Example(Game):
         self.canvas = Canvas(width=320, height=320,
                              parent=self.container)
         self.resultbox = Textbox("Result goes here.",
-                                 width=320, height=32,
-                                 font_size=14,
-                                 read_only=True,
-                                 parent=self.container)
-        self.buttonbox = Textbox("Crap goes here.",
-                                 width=320, height=32,
+                                 width=640, height=64,
                                  font_size=14,
                                  read_only=True,
                                  parent=self.container)
         self.button = Button(label="run",
                              callback=self.push_button,
                              parent=self.container)
+        self.buttonbox = Textbox("Crap goes here.",
+                                 width=320, height=32,
+                                 font_size=14,
+                                 read_only=True,
+                                 parent=self.container)
         self.pushes = 0
 
     def display(self):
