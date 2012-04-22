@@ -16,28 +16,24 @@ else:
 
 class Example(Game):
     def setup(self, root):
-        # Override some of the stuff in Engine
-        self.caption = "Example."
-        self.updates_per_sec = 30
-        
         self.container = Widget(parent=root)
-        self.textbox = Textbox("You can write here.",
+        self.textbox = Textbox(content="You can write here.",
                                width=320, height=100,
                                font_size=14,
                                color=(100, 200, 100),
                                parent=self.container)
-        self.textbox2 = Textbox("Or here.",
+        self.textbox2 = Textbox(content="Or here.",
                                 width=320, height=100,
                                 font_size=14,
                                 color=(200, 100, 100),
                                 parent=self.container)
-        self.textbox3 = Textbox("Fllllloooow.",
+        self.textbox3 = Textbox(content="Fllllloooow.",
                                 width=320, height=100,
                                 font_size=14,
                                 color=(100, 100, 200),
                                 parent=self.container,
                                 read_only=True)
-        self.textbox4 = Textbox("Sllllloooow.",
+        self.textbox4 = Textbox(content="Sllllloooow.",
                                 width=640,
                                 height=20,
                                 font_size=14,
@@ -57,6 +53,10 @@ class Example(Game):
         self.container.handle(event)
     
 if __name__ == '__main__':
-    Engine(width=640, height=240, back_color=(0,10,30), game=Example()).run()
+    Engine(caption="Example One.",
+           updates_per_sec=30,
+           width=640, height=240,
+           back_color=(0,10,30),
+           game=Example()).run()
 
 

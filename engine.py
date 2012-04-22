@@ -7,17 +7,19 @@ import game
 
 
 class Engine(object):
+    """Base engine for running the system."""
+
     contents = None
     
-    """Base engine for running the system."""
     def __init__(self, **kwargs):
-        """Creates an engine object.
-        Keywords are:
+        """Create an engine object.
+        
         width, height = Size of the window
         caption = Caption of the window
         back_color = background color
         updates_per_sec = updates per second
         game = Game object
+        
         """
         super(Engine, self).__init__()
         pygame.init()

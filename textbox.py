@@ -8,7 +8,7 @@ class Textbox(widget.Widget):
     def __init__(self, **kwargs):
         """Create a new textbox.
         
-        contents = initial contents
+        content = initial contents
         width, height = size
         parent = parent widget
         font = pygame.font object to render text
@@ -20,16 +20,17 @@ class Textbox(widget.Widget):
 
         super(Textbox, self).__init__(**kwargs)
 
-        self.contents = kwargs.get('contents', '').split('\n')
+        contents = kwargs.get('content', '')
+        self.contents = contents.split('\n')
         self.clipboard = ''
         
+        self.point = len(contents) - 1
+        self.line = self.point_line()        # Cached answer to point_line() queries
+
         self.read_only = kwargs.get('read_only', False)
         if self.read_only:
             self.focusable = False
-        
-        self.point = len(contents) - 1
 
-        self.line = self.point_line()        # Cached answer to point_line() queries
         self.scroll = 0
         
     def display(self, surface):

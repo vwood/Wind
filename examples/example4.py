@@ -17,18 +17,15 @@ from StringIO import StringIO
     
 class Example(Game):
     def setup(self, root):
-        # Override some of the stuff in Engine
-        self.caption = "Example."
-        self.updates_per_sec = 30
         self.container = Widget(parent=root)
-        self.textbox = Textbox("# python goes here.\nprint \"hello, world!\"",
+        self.textbox = Textbox(content="# python goes here.\nprint \"hello, world!\"",
                                width=320, height=320,
                                parent=self.container,
                                font_size=14,
                                color=(140, 140, 200))
         self.canvas = Canvas(width=320, height=320,
                              parent=self.container)
-        self.resultbox = Textbox("Result goes here.",
+        self.resultbox = Textbox(content="Result goes here.",
                                  width=640, height=64,
                                  font_size=14,
                                  read_only=True,
@@ -37,7 +34,6 @@ class Example(Game):
                              callback=self.push_button,
                              parent=self.container)
         Widget(width=16, parent=self.container) # Spacing
-        self.pushes = 0
 
     def display(self):
         pass
@@ -70,4 +66,7 @@ class Example(Game):
         self.container.handle(event)
     
 if __name__ == '__main__':
-    Engine(width=640, height=420, game=Example()).run()
+    Engine(caption="Example Four.",
+           updates_per_sec=30,
+           width=640, height=420,
+           game=Example()).run()
