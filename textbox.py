@@ -182,7 +182,6 @@ class Textbox(widget.Widget):
                              + self.contents[self.line + 2:])
 
     def yank(self):
-        print self.clipboard
         self.insert(self.clipboard)
 
     def cursor_start_of_line(self):
