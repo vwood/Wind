@@ -230,3 +230,13 @@ class Textbox(widget.Widget):
             fn()
         else:
             self.insert_no_newlines(event.unicode)
+
+    def bind(self, key, callback):
+        """Binds a key to a callback.
+
+        Keys are either pygame constants, or ord(character),
+            or a tuple of a pygame key mod and a key constant.
+        Callbacks are functions of no arguments.
+
+        """
+        self.bindings[key] = callback

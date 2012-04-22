@@ -33,7 +33,8 @@ class Example(Game):
         self.button = Button(label="run",
                              callback=self.push_button,
                              parent=self.container)
-        Widget(width=16, parent=self.container) # Spacing
+
+        self.textbox.bind((KMOD_CTRL, ord('x')), self.push_button)
 
     def display(self):
         pass
