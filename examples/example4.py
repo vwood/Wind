@@ -51,7 +51,7 @@ class Example(Game):
             result = eval(self.textbox.get_text())
             self.resultbox.set_text(str(result))
             return
-        except SyntaxError:
+        except Exception:
             pass
         try:
             exec self.textbox.get_text()
