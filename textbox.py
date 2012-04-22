@@ -32,6 +32,25 @@ class Textbox(widget.Widget):
             self.focusable = False
 
         self.scroll = 0
+
+        self.bindings = {K_RETURN: self.insert_newline, 
+                         K_TAB: lambda: self.insert(self, ' ' * 4),
+                         K_UP: self.cursor_up,
+                         K_LEFT: self.cursor_left,
+                         K_RIGHT: self.cursor_right,
+                         K_DOWN: self.cursor_down,
+                         K_BACKSPACE: self.delete_char_backwards,
+                         K_DELETE: self.delete_char_forwards,
+                         (KMOD_CTRL, ord('a')): self.cursor_start_of_line,
+                         (KMOD_CTRL, ord('d')): self.delete_char_forwards,
+                         (KMOD_CTRL, ord('k')): self.delete_til_end_of_line,
+                         (KMOD_CTRL, ord('y')): self.yank,
+                         (KMOD_CTRL, ord('e')): self.cursor_end_of_line,
+                         (KMOD_CTRL, ord('n')): self.cursor_down,
+                         (KMOD_CTRL, ord('p')): self.cursor_up,
+                         (KMOD_CTRL, ord('b')): self.cursor_left,
+                         (KMOD_CTRL, ord('f')): self.cursor_right,
+                         (KMOD_CTRL, ord('l')): self.scroll_to_point}
         
     def display(self, surface):
         """Display the text box on a surface."""
@@ -196,42 +215,18 @@ class Textbox(widget.Widget):
             
     def handle_keydown(self, event):
         """Handles keydown events given to the TextBox."""
-        if event.key == K_RETURN:
-            self.insert_newline()
-        elif event.key == K_TAB:
-            self.insert(' ' * 4)
-        elif event.key == K_UP:
-            self.cursor_up()
-        elif event.key == K_LEFT:
-            self.cursor_left()
-        elif event.key == K_RIGHT:
-            self.cursor_right()
-        elif event.key == K_DOWN:
-            self.cursor_down()
-        elif event.key == K_BACKSPACE:
-            self.delete_char_backwards()
-        elif event.key == K_DELETE:
-            self.delete_char_forwards()
-        elif event.mod & KMOD_CTRL:
-            if event.key == ord('a'):
-                self.cursor_start_of_line()
-            elif event.key == ord('d'):
-                self.delete_char_forwards()
-            elif event.key == ord('k'):
-                self.delete_til_end_of_line()
-            elif event.key == ord('y'):
-                self.yank()
-            elif event.key == ord('e'):
-                self.cursor_end_of_line()
-            elif event.key == ord('n'):
-                self.cursor_down()
-            elif event.key == ord('p'):
-                self.cursor_up()
-            elif event.key == ord('b'):
-                self.cursor_left()
-            elif event.key == ord('f'):
-                self.cursor_right()
-            elif event.key == ord('l'):
-                self.scroll_to_point()
+        key = event.key
+        if event.mod:
+            mod = 0
+            if event.mod & KMOD_CTRL:
+                mod = mod | KMOD_CTRL
+            if event.mod & KMOD_ALT:
+                mod = mod | KMOD_CTRL
+            if mod != 0:
+                key = (mod, key)
+            
+        fn = self.bindings.get(key, None)
+        if fn:
+            fn()
         else:
             self.insert_no_newlines(event.unicode)
