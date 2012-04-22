@@ -37,11 +37,6 @@ class Example(Game):
                              callback=self.push_button,
                              parent=self.container)
         Widget(width=16, parent=self.container) # Spacing
-        self.buttonbox = Textbox("Crap goes here.",
-                                 width=320, height=32,
-                                 font_size=14,
-                                 read_only=True,
-                                 parent=self.container)
         self.pushes = 0
 
     def display(self):
@@ -51,13 +46,16 @@ class Example(Game):
         pass
 
     def push_button(self):
-        self.pushes += 1
-        self.buttonbox.set_text("pushed button %d times." % (self.pushes,))
-
         buffer = StringIO()
         old_stdout = sys
         sys.stdout = buffer
 
+        try:
+            result = eval(self.textbox.get_text())
+            self.resultbox.set_text(str(result))
+            return
+        except SyntaxError:
+            pass
         try:
             exec self.textbox.get_text()
             self.resultbox.set_text(buffer.getvalue())

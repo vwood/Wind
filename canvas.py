@@ -4,18 +4,26 @@ import widget
 
 class Canvas(widget.Widget):
     """A GUI canvas.
-    Contains other items."""
+    
+    Contains other items.
+
+    """
     
     def __init__(self, **kwargs):
-        """Create a new widget, options are:
+        """Create a new Canvas widget.
+
         x, y = position
         width, height = size
         parent = parent widget, will add to the parent if specified.
-        font = pygame.font object to render text
-        font_size = size of the font
-        color = color of text and other foreground
+        font = pygame.font object to render text.
+        font_size = size of the font.
+        color = color of text and other foreground.
+        handler = an event handler that takes a pygame event.
+
         """
         super(Canvas, self).__init__(**kwargs)        
+
+        self.event_handler = kwargs.get('handler', lambda event: None)
         
     def add(self, child):
         if len(self.contents) == 0:
@@ -40,9 +48,11 @@ class Canvas(widget.Widget):
         surface.set_clip(clip)
 
     def handle(self, event):
-        """self.selection handles the event dispatch.
-        Except for mouse events which go to whatever is clicked upon.
-        Which then changes the current selection."""
+        """Handle pygame events.
+        
+        Canvases give the event to the underlying callback.
+
+        """
         if event.type == MOUSEBUTTONDOWN:
             for item in self.contents:
                 if item.get_rect().collidepoint(event.pos):

@@ -3,22 +3,26 @@ from pygame.locals import *
 
 class Widget(object):
     """A GUI item.
-    May contain other GUI items. (in a flow based layout)"""
+
+    May contain other GUI items. (in a flow based layout).
+
+    """
 
     name = "Unnamed"
     parent = None
     focusable = True
     
     def __init__(self, **kwargs):
-        """Create a new widget, options are:
+        """Create a new widget.
+        
         x, y = position
         width, height = size
         parent = parent widget, will add to the parent if specified.
         font = pygame.font object to render text
         font_size = size of the font
         color = color of text and other foreground
-        """
         
+        """
         self.pos = Rect(kwargs.get('x', 0), kwargs.get('y', 0),
                         kwargs.get('width', 0), kwargs.get('height', 0))
         self.set_parent(kwargs.get('parent', None))
@@ -101,9 +105,13 @@ class Widget(object):
         surface.set_clip(clip)
 
     def handle(self, event):
-        """self.selection handles the event dispatch.
-        Except for mouse events which go to whatever is clicked upon.
-        Which then changes the current selection."""
+        """Handle pygame events.
+
+        self.selection handles the event dispatch.
+        Except for mouse events which go to whatever is clicked upon,
+        and change the current selection.
+
+        """
         if event.type == MOUSEBUTTONDOWN:
             for item in self.contents:
                 if item.get_rect().collidepoint(event.pos):

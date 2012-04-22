@@ -5,23 +5,22 @@ from util import *
 class Textbox(widget.Widget):
     """A box that contains text."""
 
-    def __init__(self, contents = "", **kwargs):
-        """Create a new textbox,
+    def __init__(self, **kwargs):
+        """Create a new textbox.
+        
         contents = initial contents
-        
-        keyword options are:
-        
         width, height = size
         parent = parent widget
         font = pygame.font object to render text
         font_size = size of the font
         color = color of text and other foreground
         read_only = Boolean, is the textbox read only?
+        
         """
 
         super(Textbox, self).__init__(**kwargs)
 
-        self.contents = contents.split('\n')
+        self.contents = kwargs.get('contents', '').split('\n')
         self.clipboard = ''
         
         self.read_only = kwargs.get('read_only', False)
@@ -185,7 +184,7 @@ class Textbox(widget.Widget):
 
     # Event Handling
     def handle(self, event):
-        """Overrides the widget method."""
+        """Handle pygame events."""
         if event.type == KEYDOWN:
             self.handle_keydown(event)
         if event.type == MOUSEBUTTONDOWN:

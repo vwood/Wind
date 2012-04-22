@@ -5,8 +5,6 @@ from util import *
 
 class Tabbedbox(widget.Widget):
     """A box that uses tabs to contain other widgets.
-
-    keyword options are:
     
     width, height = size
     parent = parent widget
@@ -14,6 +12,7 @@ class Tabbedbox(widget.Widget):
     font_size = size of the font
     color = color of text and other foreground
     read_only = Boolean, is the textbox read only?
+    
     """
     def __init__(self, **kwargs):
         super(Tabbedbox, self).__init__(**kwargs)
@@ -53,9 +52,13 @@ class Tabbedbox(widget.Widget):
         surface.set_clip(clip)
 
     def handle(self, event):
-        """self.selection handles the event dispatch.
+        """Handle pygame events.
+
+        self.selection handles the event dispatch.
         Except for tab mouse events which change the current selection.
-        (Or go to the selection if in that space."""
+        (Or go to the selection if in that space.
+
+        """
         if event.type == MOUSEBUTTONDOWN:
             mx, my = event.pos
             if my < self.tab_height:
