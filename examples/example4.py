@@ -49,7 +49,7 @@ class Example(Game):
 
         try:
             result = eval(self.textbox.get_text())
-            self.resultbox.set_text(str(result))
+            self.resultbox.set_text(repr(result))
             return
         except Exception:
             pass
