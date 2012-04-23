@@ -34,6 +34,10 @@ class Example(Game):
                              callback=self.push_button,
                              parent=self.container)
 
+        self.sprite = Sprite(x=340, y=0,
+                             image="resources/button_purple.png",
+                             parent=self.canvas)
+
         self.textbox.bind((KMOD_CTRL, ord('x')), self.push_button)
 
     def display(self):

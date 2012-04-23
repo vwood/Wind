@@ -4,4 +4,5 @@ from textbox import Textbox
 from tabbedbox import Tabbedbox
 from canvas import Canvas
 from game import Game
+from sprite import Sprite
 from button import Button
