@@ -14,7 +14,7 @@ class Sprite(widget.Widget):
 
         """
         super(Sprite, self).__init__(**kwargs)
-        
+
         self.image = kwargs.get('image', None)
         if type(self.image) is str:
             self.image = pygame.image.load(self.image).convert_alpha()
@@ -27,5 +27,3 @@ class Sprite(widget.Widget):
     def display(self, surface):
         """Display the selected widget, and the tabs."""
         surface.blit(self.image, self.pos, self.image_pos)
-
-

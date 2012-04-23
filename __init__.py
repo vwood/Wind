@@ -5,4 +5,5 @@ from tabbedbox import Tabbedbox
 from canvas import Canvas
 from game import Game
 from sprite import Sprite
+from spritesheet import SpriteSheet
 from button import Button
