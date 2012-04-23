@@ -1,8 +1,6 @@
 * TODOlist items take from the source code:
 ** TODO textbox: Text selection    
 ** TODO textbox: Simple syntax highlighting (requires meta data)
-** TODO textbox: keybindings stored in a dict. (or several dicts.)
-** TODO textbox: scroll with wheel mouse
 ** TODO textbox: append killed region if last command was also a kill
 ** TODO button: Add CBARGS to callback
 ** TODO canvas: self.contents should be some sort of spatial hash
