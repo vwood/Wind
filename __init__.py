@@ -6,4 +6,5 @@ from canvas import Canvas
 from game import Game
 from sprite import Sprite
 from spritesheet import SpriteSheet
+from tilelayer import TileLayer
 from button import Button

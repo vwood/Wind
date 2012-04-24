@@ -21,8 +21,13 @@ class Example(Game):
                                       mario=(0,0,24,32))
         self.tilesheet = SpriteSheet("resources/platform.png",
                                       platform=(1,1,32,32))
-        self.sprite = self.mariosheet.sprite("mario", 340, 0, self.canvas)
-        self.tile = self.tilesheet.sprite("platform", 300, 100, self.canvas)
+        self.tiles = TileLayer(x=0,y=0,
+                               width=96,height=96,
+                               tile_width=32, tile_height=32,
+                               spritesheet=self.tilesheet,
+                               tiles=["platform"],
+                               parent=self.canvas)
+        self.sprite = self.mariosheet.sprite("mario", 4, 0, self.canvas)
 
     def display(self):
         pass
@@ -38,5 +43,5 @@ class Example(Game):
 if __name__ == '__main__':
     Engine(caption="Example Five.",
            updates_per_sec=30,
-           width=640, height=420,
+           width=96, height=96,
            game=Example()).run()

@@ -25,5 +25,5 @@ class Sprite(widget.Widget):
         self.pos = Rect(x, y, w, h)
 
     def display(self, surface):
-        """Display the selected widget, and the tabs."""
+        """Display the sprite."""
         surface.blit(self.image, self.pos, self.image_pos)

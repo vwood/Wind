@@ -15,5 +15,13 @@
 ** TODO widget: allow for styling/themes (inherit theme from parent.)
 ** TODO widget.add: perhaps just calculate the new items' position rather than set positions_are_dirty
 ** TODO widget.remove: perhaps just calculate the new items' after positions rather than set positions_are_dirty
+** TODO sprite: decouple position data from the image data.
+Basically, we should be able to instantiate sprites as game objects
+Entities should be able to reference animations and so on for their sprite.
+** TODO tilelayer: render to a surface?
+only update when the tiles change.
+** TODO tilelayer: collisions vs. sprites
+This will require some idea of what tiles are collidable...
+
 
 
