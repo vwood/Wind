@@ -36,8 +36,13 @@ class Example(Game):
         pass
 
     def handle_event(self, event):
-        if event.type == KEYDOWN and event.key == K_ESCAPE:
-            exit()
+        if event.type == KEYDOWN:
+            if event.key == K_ESCAPE:
+                exit()
+            elif event.key == K_LEFT:
+                self.sprite.move(-2, 0)
+            elif event.key == K_RIGHT:
+                self.sprite.move(2, 0)
         self.canvas.handle(event)
     
 if __name__ == '__main__':

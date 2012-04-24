@@ -27,3 +27,8 @@ class Sprite(widget.Widget):
     def display(self, surface):
         """Display the sprite."""
         surface.blit(self.image, self.pos, self.image_pos)
+
+    def move(self, dx, dy):
+        self.pos.x += dx
+        self.pos.y += dy
+        
