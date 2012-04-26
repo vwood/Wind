@@ -34,8 +34,9 @@ class Example(Game):
                              callback=self.push_button,
                              parent=self.container)
 
-        self.sprite = Sprite(x=340, y=0,
-                             image="resources/button_purple.png",
+        self.sprite = Sprite(image="resources/button_purple.png")
+        self.entity = Entity(sprite=self.sprite,
+                             x = 340, y = 0,
                              parent=self.canvas)
 
         self.textbox.bind((KMOD_CTRL, ord('x')), self.push_button)
