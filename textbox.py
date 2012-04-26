@@ -233,7 +233,6 @@ class Textbox(widget.Widget):
 
         self.last_command = self.this_command
         self.this_command = self.bindings.get(key, None)
-        print self.last_command, self.this_command
         if self.this_command:
             self.this_command()
         else:
