@@ -20,6 +20,7 @@ class Entity(widget.Widget):
         iw, ih = self.sprite.get_size()
         w, h = kwargs.get('width', iw), kwargs.get('height', ih)
         self.pos = Rect(x, y, w, h)
+        self.dpos = Rect(0, 0, 0, 0)
 
     def display(self, surface):
         """Display the sprite."""
@@ -28,6 +29,25 @@ class Entity(widget.Widget):
     def move(self, dx, dy):
         self.pos.x += dx
         self.pos.y += dy
+
+    def inc_x_speed(self, dx):
+        self.dpos.x += dx
+        
+    def inc_y_speed(self, dy):
+        self.dpos.y += dy
         
     def update(self):
-        pass
+        self.pos.x += self.dpos.x
+        if not self.parent.pos.contains(self.pos):
+            self.pos.x -= self.dpos.x
+            self.dpos.x = 0
+        self.pos.y += self.dpos.y
+        if not self.parent.pos.contains(self.pos):
+            self.pos.y -= self.dpos.y
+            self.dpos.y = 0
+        self.dpos.y += 1
+        if self.dpos.x > 0:
+            self.dpos.x -= 1
+        elif self.dpos.x < 0:
+            self.dpos.x += 1
+        # TODO: Check we're inside the parent, don't leave the parent

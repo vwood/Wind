@@ -119,6 +119,5 @@ class Widget(object):
                         self.selection = item
                     item.handle(event)
                     return
-        elif event.type == KEYDOWN:
-            if self.selection:
-                self.selection.handle(event)
+        elif self.selection:
+            self.selection.handle(event)

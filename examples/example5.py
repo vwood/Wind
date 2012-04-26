@@ -20,12 +20,14 @@ class Example(Game):
         self.mariosheet = SpriteSheet("resources/mario.gif",
                                       mario=(0,0,24,32))
         self.tilesheet = SpriteSheet("resources/platform.png",
-                                      platform=(1,1,32,32))
+                                     platform=(1,1,32,32),
+                                     blank=None,
+                                     wall=(34,34,32,32))
         self.tiles = TileLayer(x=0,y=0,
                                width=96,height=96,
                                tile_width=32, tile_height=32,
                                spritesheet=self.tilesheet,
-                               tiles=["platform"],
+                               tiles=["platform", "blank", "wall"],
                                parent=self.canvas)
         self.sprite = self.mariosheet.sprite("mario")
         self.mario = Entity(sprite=self.sprite,
@@ -36,17 +38,20 @@ class Example(Game):
         pass
 
     def update(self):
-        pass
+        self.mario.update()
 
     def handle_event(self, event):
         if event.type == KEYDOWN:
             if event.key == K_ESCAPE:
                 exit()
             elif event.key == K_LEFT:
-                self.mario.move(-2, 0)
+                self.mario.inc_x_speed(-2)
             elif event.key == K_RIGHT:
-                self.mario.move(2, 0)
-        self.canvas.handle(event)
+                self.mario.inc_x_speed(2)
+            elif event.key == K_UP:
+                self.mario.inc_y_speed(-20)
+            else:
+                self.canvas.handle(event)
     
 if __name__ == '__main__':
     Engine(caption="Example Five.",

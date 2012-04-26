@@ -1,6 +1,7 @@
 import pygame
 from pygame.locals import *
 import widget
+import random
 
 class TileLayer(widget.Widget):
     def __init__(self, **kwargs):
@@ -25,7 +26,7 @@ class TileLayer(widget.Widget):
         self.tiles_down = h / th
         self.spritesheet = kwargs.get('spritesheet')
         self.tiles = [self.spritesheet.sprite(tilename) for tilename in kwargs.get('tiles', [])]
-        self.layer = [[self.tiles[0] for _ in range(self.tiles_across)]
+        self.layer = [[self.tiles[random.randint(0, len(self.tiles)-1)] for _ in range(self.tiles_across)]
                       for _ in range(self.tiles_down)]
         
     def collide(self, sprite):
