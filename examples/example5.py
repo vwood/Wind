@@ -27,7 +27,10 @@ class Example(Game):
                                spritesheet=self.tilesheet,
                                tiles=["platform"],
                                parent=self.canvas)
-        self.sprite = self.mariosheet.sprite("mario", 4, 0, self.canvas)
+        self.sprite = self.mariosheet.sprite("mario")
+        self.mario = Entity(sprite=self.sprite,
+                            x=0, y=0,
+                            parent=self.canvas)
 
     def display(self):
         pass
@@ -40,9 +43,9 @@ class Example(Game):
             if event.key == K_ESCAPE:
                 exit()
             elif event.key == K_LEFT:
-                self.sprite.move(-2, 0)
+                self.mario.move(-2, 0)
             elif event.key == K_RIGHT:
-                self.sprite.move(2, 0)
+                self.mario.move(2, 0)
         self.canvas.handle(event)
     
 if __name__ == '__main__':

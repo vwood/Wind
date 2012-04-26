@@ -2,33 +2,29 @@ import pygame
 from pygame.locals import *
 import widget
 
-class Sprite(widget.Widget):
+class Sprite(object):
     def __init__(self, **kwargs):
         """Create a new Sprite.
 
-        x, y = position
+        x, y = x, y offset
         width, height = size
         parent = parent widget, will add to the parent if specified.
         image = image filename or pygame surface
         image_pos = tuple of the position in the image, None (default) for entire image.
 
         """
-        super(Sprite, self).__init__(**kwargs)
-
         self.image = kwargs.get('image', None)
         if type(self.image) is str:
             self.image = pygame.image.load(self.image).convert_alpha()
         iw, ih = self.image.get_size()
         self.image_pos = kwargs.get('image_pos', (0, 0, iw, ih))
-        x, y = kwargs.get('x', 0), kwargs.get('y', 0)
-        w, h = kwargs.get('width', iw), kwargs.get('height', ih)
-        self.pos = Rect(x, y, w, h)
+        self.x, self.y = kwargs.get('x', 0), kwargs.get('y', 0)
 
-    def display(self, surface):
+    def display(self, surface, pos):
         """Display the sprite."""
-        surface.blit(self.image, self.pos, self.image_pos)
+        x, y, _, _ = pos
+        surface.blit(self.image, (x + self.x, y + self.y), self.image_pos)
 
-    def move(self, dx, dy):
-        self.pos.x += dx
-        self.pos.y += dy
-        
+    def get_size(self):
+        _, _, iw, ih = self.image_pos
+        return (iw, ih)

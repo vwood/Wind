@@ -14,9 +14,7 @@ class SpriteSheet(object):
         for key, value in kwargs.iteritems():
             self.sprites[key] = value
 
-    def sprite(self, name, x, y, parent=None):
+    def sprite(self, name):
         """Get a sprite from the sheet."""
-        return sprite.Sprite(x=x, y=y,
-                             image=self.image,
-                             parent=parent,
+        return sprite.Sprite(image=self.image,
                              image_pos = self.sprites[name])

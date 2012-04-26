@@ -8,3 +8,4 @@ from sprite import Sprite
 from spritesheet import SpriteSheet
 from tilelayer import TileLayer
 from button import Button
+from entity import Entity

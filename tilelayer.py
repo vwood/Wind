@@ -24,7 +24,7 @@ class TileLayer(widget.Widget):
         self.tiles_across = w / tw
         self.tiles_down = h / th
         self.spritesheet = kwargs.get('spritesheet')
-        self.tiles = [self.spritesheet.sprite(tilename, 0, 0, None) for tilename in kwargs.get('tiles', [])]
+        self.tiles = [self.spritesheet.sprite(tilename) for tilename in kwargs.get('tiles', [])]
         self.layer = [[self.tiles[0] for _ in range(self.tiles_across)]
                       for _ in range(self.tiles_down)]
         
