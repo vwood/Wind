@@ -32,7 +32,8 @@ class Textbox(widget.Widget):
             self.focusable = False
 
         self.scroll = 0
-
+        self.last_command = None
+        self.this_command = None
         self.bindings = {K_RETURN: self.insert_newline, 
                          K_TAB: lambda: self.insert(self, ' ' * 4),
                          K_UP: self.cursor_up,
@@ -172,10 +173,16 @@ class Textbox(widget.Widget):
     def delete_til_end_of_line(self):
         if self.read_only: return
         if self.point < len(self.contents[self.line]):
-            self.clipboard = self.contents[self.line][self.point:]
+            if self.this_command == self.last_command:
+                self.clipboard += self.contents[self.line][self.point:]
+            else:
+                self.clipboard = self.contents[self.line][self.point:]
             self.contents[self.line] = self.contents[self.line][:self.point]
         elif self.line < len(self.contents) - 1:
-            self.clipboard = '\n'
+            if self.this_command == self.last_command:
+                self.clipboard += '\n'
+            else:
+                self.clipboard = '\n'
             self.contents = (self.contents[:self.line]
                              + [self.contents[self.line]
                                 + self.contents[self.line + 1]]
@@ -223,10 +230,12 @@ class Textbox(widget.Widget):
                 mod = mod | KMOD_CTRL
             if mod != 0:
                 key = (mod, key)
-            
-        fn = self.bindings.get(key, None)
-        if fn:
-            fn()
+
+        self.last_command = self.this_command
+        self.this_command = self.bindings.get(key, None)
+        print self.last_command, self.this_command
+        if self.this_command:
+            self.this_command()
         else:
             self.insert_no_newlines(event.unicode)
 
