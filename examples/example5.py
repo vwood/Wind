@@ -52,6 +52,11 @@ class Example(Game):
                 self.mario.inc_y_speed(-20)
             else:
                 self.canvas.handle(event)
+        elif event.type == KEYUP:
+            if event.key == K_LEFT:
+                self.mario.inc_x_speed(2)
+            elif event.key == K_RIGHT:
+                self.mario.inc_x_speed(-2)
     
 if __name__ == '__main__':
     Engine(caption="Example Five.",
