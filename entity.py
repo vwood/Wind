@@ -46,8 +46,4 @@ class Entity(widget.Widget):
             self.pos.y -= self.dpos.y
             self.dpos.y = 0
         self.dpos.y += 1
-        if self.dpos.x > 0:
-            self.dpos.x -= 1
-        elif self.dpos.x < 0:
-            self.dpos.x += 1
-        # TODO: Check we're inside the parent, don't leave the parent
+
